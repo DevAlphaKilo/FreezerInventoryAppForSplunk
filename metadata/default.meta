@@ -59,6 +59,11 @@ modtime = 1569865816.820627000
 
 ### Views
 
+[views/freezer_overview]
+owner = nobody
+version = 7.3.1.1
+modtime = 1569862977.985638000
+
 [views/add_item_meat]
 owner = nobody
 version = 7.3.1.1
