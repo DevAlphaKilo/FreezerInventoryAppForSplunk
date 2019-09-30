@@ -1,5 +1,5 @@
-<form script="submit-form.js" stylesheet="input-forms.css">
-  <label>Add Item</label>
+<form script="input-forms.js" stylesheet="input-forms.css">
+  <label>Add Meat Item</label>
   <fieldset submitButton="true" autoRun="false">
     <input type="dropdown" token="meat_type" searchWhenChanged="true">
       <label>Meat Type</label>
