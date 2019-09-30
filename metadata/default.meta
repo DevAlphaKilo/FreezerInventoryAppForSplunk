@@ -19,7 +19,23 @@ modtime = 1569853301.511803000
 
 ### Lookups
 
+[lookups/cut_types.csv]
+access = read : [ * ], write : [ admin, power ]
+export = none
+owner = nobody
+version = 7.3.1.1
+modtime = 1569865032.925812000
+
+[lookups/meat_types.csv]
+access = read : [ * ], write : [ admin, power ]
+export = none
+owner = nobody
+version = 7.3.1.1
+modtime = 1569865040.314465000
+
 [lookups/meats.csv]
+access = read : [ * ], write : [ admin, power ]
+export = none
 owner = nobody
 version = 7.3.1.1
 modtime = 1569863300.054856000
