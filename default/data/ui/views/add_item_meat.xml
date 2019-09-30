@@ -1,4 +1,4 @@
-<form>
+<form script="submit-form.js" stylesheet="input-forms.css">
   <label>Add Item</label>
   <fieldset submitButton="true" autoRun="false">
     <input type="dropdown" token="meat_type" searchWhenChanged="true">
@@ -52,16 +52,25 @@
     </input>
   </fieldset>
   <row>
-    <panel>
+    <panel depends="$input_complete$">
       <title>Addition(s) Preview</title>
       <table>
         <search>
+          <progress>
+            <condition match="'job.resultCount' &gt; 0">
+              <set token="input_complete">true</set>
+            </condition>
+            <condition>
+              <unset token="input_complete"></unset>
+            </condition>
+          </progress>
           <query>| makeresults $pack_qty$
 | streamstats count AS pack_id
 | eval meat_type="$meat_type$", cut_type="$cut_type$", cut_qty="$cut_qty$"
 | eval purchase_date=strftime(strptime("$purchase_date$", "%m/%d/%Y"), "%m/%d/%Y %H:%M:%S")
 | eval sealed_date=strftime(strptime("$sealed_date$", "%m/%d/%Y"), "%m/%d/%Y %H:%M:%S")
-| table pack_id _time meat_type, cut_type, purchase_date, sealed_date, cut_qty</query>
+| eval input_date=strftime(now(), "%m/%d/%Y %H:%M:%S") 
+| table pack_id input_date meat_type, cut_type, purchase_date, sealed_date, cut_qty</query>
           <earliest>-24h@h</earliest>
           <latest>now</latest>
         </search>
@@ -69,6 +78,13 @@
         <option name="drilldown">none</option>
         <option name="refresh.display">progressbar</option>
       </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <html>
+        <input id="submit_button" type="button" value="Submit Input"/>
+      </html>
     </panel>
   </row>
 </form>
