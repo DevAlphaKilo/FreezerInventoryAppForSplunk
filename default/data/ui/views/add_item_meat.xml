@@ -1,0 +1,74 @@
+<form>
+  <label>Add Item</label>
+  <fieldset submitButton="true" autoRun="false">
+    <input type="dropdown" token="meat_type" searchWhenChanged="true">
+      <label>Meat Type</label>
+      <fieldForLabel>type</fieldForLabel>
+      <fieldForValue>type</fieldForValue>
+      <search>
+        <query>| inputlookup meat_types</query>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </search>
+    </input>
+    <input type="dropdown" token="cut_type" searchWhenChanged="true">
+      <label>Cut Type</label>
+      <fieldForLabel>cut_type</fieldForLabel>
+      <fieldForValue>cut_type</fieldForValue>
+      <search>
+        <query>| inputlookup cut_types</query>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </search>
+    </input>
+    <input type="text" token="purchase_date" searchWhenChanged="true">
+      <label>Purchase Date</label>
+    </input>
+    <input type="text" token="sealed_date" searchWhenChanged="true">
+      <label>Sealed Date</label>
+    </input>
+    <input type="dropdown" token="cut_qty" searchWhenChanged="true">
+      <label>Cut Quantity</label>
+      <default>1</default>
+      <initialValue>1</initialValue>
+      <fieldForLabel>count</fieldForLabel>
+      <fieldForValue>count</fieldForValue>
+      <search>
+        <query>| makeresults count=10
+| streamstats count</query>
+      </search>
+    </input>
+    <input type="dropdown" token="pack_qty" searchWhenChanged="true">
+      <label>Pack Quantity</label>
+      <default>1</default>
+      <initialValue>1</initialValue>
+      <fieldForLabel>count</fieldForLabel>
+      <fieldForValue>count</fieldForValue>
+      <search>
+        <query>| makeresults count=10
+| streamstats count</query>
+      </search>
+      <prefix>count=</prefix>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <title>Addition(s) Preview</title>
+      <table>
+        <search>
+          <query>| makeresults $pack_qty$
+| streamstats count AS pack_id
+| eval meat_type="$meat_type$", cut_type="$cut_type$", cut_qty="$cut_qty$"
+| eval purchase_date=strftime(strptime("$purchase_date$", "%m/%d/%Y"), "%m/%d/%Y %H:%M:%S")
+| eval sealed_date=strftime(strptime("$sealed_date$", "%m/%d/%Y"), "%m/%d/%Y %H:%M:%S")
+| table pack_id _time meat_type, cut_type, purchase_date, sealed_date, cut_qty</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="count">10</option>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+</form>
