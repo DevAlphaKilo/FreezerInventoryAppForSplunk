@@ -1,6 +1,8 @@
-<nav search_view="search" color="#FFFFFF">
-  <view name="dashboards" default="true" />
-  <view name="alerts" />
+<nav search_view="search">
+  <view name="freezer_overview" default="true" />
+  <collection label="Add Items">
+    <view name="Add New Meat Item" />
+  </collection>
   <view name="reports" />
-  <view name="search" />
+  <view name="alerts" />
 </nav>
