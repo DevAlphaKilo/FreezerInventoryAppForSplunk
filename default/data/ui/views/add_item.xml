@@ -1,8 +1,14 @@
 <form script="input-forms.js" stylesheet="input-forms.css">
-  <label>Add Meat Item</label>
+  <label>Add Item</label>
   <fieldset submitButton="true" autoRun="false">
-    <input type="dropdown" token="meat_type" searchWhenChanged="true">
-      <label>Meat Type</label>
+    <input type="dropdown" token="item">
+      <label>Item Type</label>
+      <choice value="meat">Meat</choice>
+      <default>meat</default>
+      <initialValue>meat</initialValue>
+    </input>
+    <input type="dropdown" token="subtype" searchWhenChanged="true">
+      <label>Subtype</label>
       <fieldForLabel>type</fieldForLabel>
       <fieldForValue>type</fieldForValue>
       <search>
@@ -66,11 +72,12 @@
           </progress>
           <query>| makeresults $pack_qty$
 | streamstats count AS pack_id
-| eval meat_type="$meat_type$", cut_type="$cut_type$", cut_qty="$cut_qty$"
+| eval item="$item$", subtype="$subtype$", cut_type="$cut_type$", cut_qty="$cut_qty$"
 | eval purchase_date=strftime(strptime("$purchase_date$", "%m/%d/%Y"), "%m/%d/%Y %H:%M:%S")
 | eval sealed_date=strftime(strptime("$sealed_date$", "%m/%d/%Y"), "%m/%d/%Y %H:%M:%S")
 | eval input_date=strftime(now(), "%m/%d/%Y %H:%M:%S") 
-| table pack_id input_date meat_type, cut_type, purchase_date, sealed_date, cut_qty</query>
+| eval item_id=sha512(pack_id + input_date + item + subtype + cut_type + purchase_date + sealed_date + cut_qty)
+| table pack_id, item_id, input_date, item, subtype, cut_type, purchase_date, sealed_date, cut_qty</query>
           <earliest>-24h@h</earliest>
           <latest>now</latest>
         </search>

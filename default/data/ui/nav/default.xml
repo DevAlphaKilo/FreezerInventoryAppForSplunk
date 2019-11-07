@@ -1,8 +1,6 @@
 <nav search_view="search">
   <view name="freezer_overview" default="true" />
-  <collection label="Add Items">
-    <view name="add_item_meat" />
-  </collection>
+  <view name="add_item" />
   <view name="reports" />
   <view name="alerts" />
 </nav>
