@@ -1,14 +1,6 @@
-require([ "jquery", "splunkjs/mvc/simplexml/ready!"],
+require([ 	"jquery",
+			"splunkjs/mvc/simplexml/ready!"
 function($){
-    $( document ).ready(function() {
-        console.log("document ready")
-        var now = new Date();
-        var date = (now.getMonth() + 1) + "/" + now.getDate() + "/" + now.getFullYear()
-        $("input[role='textbox'").each(function( index ) {
-           //$(this).attr("value", date)
-           $(this).val(date)
-        });
-    ));
     $("#submit_button").on("click", function (){
         var tableHeaders = {};
         var tableResults = {};
