@@ -65,7 +65,7 @@
   <row>
     <panel depends="$input_complete$">
       <title>Addition(s) Preview</title>
-      <table>
+      <table id="new_items">
         <search>
           <progress>
             <condition match="'job.resultCount' &gt; 0">
