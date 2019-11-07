@@ -1,19 +1,24 @@
 <form script="input-forms.js" stylesheet="input-forms.css">
   <label>Add Item</label>
-  <fieldset submitButton="true" autoRun="false">
+  <fieldset submitButton="true" autoRun="true">
     <input type="dropdown" token="item">
       <label>Item Type</label>
-      <choice value="meat">Meat</choice>
-      <default>meat</default>
-      <initialValue>meat</initialValue>
+      <fieldForLabel>item_types</fieldForLabel>
+      <fieldForValue>item_types</fieldForValue>
+      <search>
+        <query>| inputlookup item_types</query>
+        <earliest>-4h@m</earliest>
+        <latest>now</latest>
+      </search>
     </input>
     <input type="dropdown" token="subtype" searchWhenChanged="true">
       <label>Subtype</label>
-      <fieldForLabel>type</fieldForLabel>
-      <fieldForValue>type</fieldForValue>
+      <fieldForLabel>item_subtype</fieldForLabel>
+      <fieldForValue>item_subtype</fieldForValue>
       <search>
-        <query>| inputlookup meat_types</query>
-        <earliest>-24h@h</earliest>
+        <query>| inputlookup item_subtypes
+| search item_type=$item$</query>
+        <earliest>-4h@m</earliest>
         <latest>now</latest>
       </search>
     </input>
@@ -22,7 +27,7 @@
       <fieldForLabel>cut_type</fieldForLabel>
       <fieldForValue>cut_type</fieldForValue>
       <search>
-        <query>| inputlookup cut_types</query>
+        <query>| inputlookup meat_cut_types</query>
         <earliest>-24h@h</earliest>
         <latest>now</latest>
       </search>
