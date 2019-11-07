@@ -1,4 +1,4 @@
-<form script="input-forms.js" stylesheet="input-forms.css">
+<form stylesheet="input-forms.css" script="add-items.js,autofill-date-today.js">
   <label>Add Item</label>
   <fieldset submitButton="true" autoRun="true">
     <input type="dropdown" token="item">
