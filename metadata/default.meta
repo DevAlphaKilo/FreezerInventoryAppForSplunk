@@ -5,16 +5,16 @@ access = read : [ * ], write : [ admin, power ]
 
 [app/ui]
 owner = nobody
-version = 7.3.1.1
+version = 8.0.0
 modtime = 1569853301.508236000
 
 [app/launcher]
 owner = nobody
-version = 7.3.1.1
+version = 8.0.0
 modtime = 1569853301.510879000
 
 [app/package/check_for_updates]
-version = 7.3.1.1
+version = 8.0.0
 modtime = 1569853301.511803000
 
 ### Lookups
@@ -23,21 +23,21 @@ modtime = 1569853301.511803000
 access = read : [ * ], write : [ admin, power ]
 export = none
 owner = nobody
-version = 7.3.1.1
+version = 8.0.0
 modtime = 1569865032.925812000
 
 [lookups/item_subtypes.csv]
 access = read : [ * ], write : [ admin, power ]
 export = none
 owner = nobody
-version = 7.3.1.1
+version = 8.0.0
 modtime = 1569865040.314465000
 
 [lookups/meat_cut_types.csv]
 access = read : [ * ], write : [ admin, power ]
 export = none
 owner = nobody
-version = 7.3.1.1
+version = 8.0.0
 modtime = 1569863300.054856000
 
 ### Transforms
@@ -46,14 +46,14 @@ modtime = 1569863300.054856000
 access = read : [ * ], write : [ admin ]
 export = none
 owner = nobody
-version = 7.3.1.1
+version = 8.0.0
 modtime = 1569865813.176901000
 
 [transforms/cut_types]
 access = read : [ * ], write : [ admin ]
 export = none
 owner = nobody
-version = 7.3.1.1
+version = 8.0.0
 modtime = 1569865816.820627000
 
 
@@ -61,10 +61,10 @@ modtime = 1569865816.820627000
 
 [views/freezer_overview]
 owner = nobody
-version = 7.3.1.1
+version = 8.0.0
 modtime = 1569862977.985638000
 
 [views/add_item]
 owner = nobody
-version = 7.3.1.1
+version = 8.0.0
 modtime = 1569862977.985638000
