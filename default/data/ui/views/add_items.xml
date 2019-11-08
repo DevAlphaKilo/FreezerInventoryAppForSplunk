@@ -1,7 +1,7 @@
 <form stylesheet="input-forms.css" script="add-items.js,autofill-date-today.js">
   <label>Add Items</label>
   <fieldset submitButton="false" autoRun="true">
-    <input type="dropdown" token="item_type">
+    <input type="dropdown" id="item_type" token="item_type">
       <label>Item Type</label>
       <fieldForLabel>item_types</fieldForLabel>
       <fieldForValue>item_types</fieldForValue>
@@ -11,7 +11,7 @@
         <latest>now</latest>
       </search>
     </input>
-    <input type="dropdown" token="item_subtype" searchWhenChanged="true">
+    <input type="dropdown" id="item_subtype" token="item_subtype" searchWhenChanged="true">
       <label>Subtype</label>
       <fieldForLabel>item_subtype</fieldForLabel>
       <fieldForValue>item_subtype</fieldForValue>
@@ -21,7 +21,7 @@
         <latest>now</latest>
       </search>
     </input>
-    <input type="dropdown" token="item_sub_subtype" searchWhenChanged="true">
+    <input type="dropdown" id="item_sub_subtype" token="item_sub_subtype" searchWhenChanged="true">
       <label>Item Sub Subtype</label>
       <fieldForLabel>item_sub_subtype</fieldForLabel>
       <fieldForValue>item_sub_subtype</fieldForValue>
@@ -31,14 +31,14 @@
         <latest>now</latest>
       </search>
     </input>
-    <input id="purchase_date" type="text" token="purchase_date" searchWhenChanged="true">
+    <input type="text" id="purchase_date" token="purchase_date" searchWhenChanged="true">
       <label>Purchase Date</label>
     </input>
-    <input id="sealed_date" type="text" token="sealed_date" searchWhenChanged="true">
+    <input type="text" id="sealed_date" token="sealed_date" searchWhenChanged="true">
       <label>Sealed Date</label>
     </input>
-    <input type="dropdown" token="cut_qty" searchWhenChanged="true">
-      <label>Cut Quantity</label>
+    <input type="dropdown" id="pack_contains" token="pack_contains" searchWhenChanged="true">
+      <label>Pack Contains</label>
       <default>1</default>
       <initialValue>1</initialValue>
       <fieldForLabel>count</fieldForLabel>
