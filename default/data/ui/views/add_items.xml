@@ -16,8 +16,7 @@
       <fieldForLabel>item_subtype</fieldForLabel>
       <fieldForValue>item_subtype</fieldForValue>
       <search>
-        <query>| inputlookup item_subtypes
-| search item_type=$item_type$</query>
+        <query>| inputlookup item_subtypes | search item_type="$item_type$"</query>
         <earliest>-4h@m</earliest>
         <latest>now</latest>
       </search>
@@ -27,7 +26,7 @@
       <fieldForLabel>item_sub_subtype</fieldForLabel>
       <fieldForValue>item_sub_subtype</fieldForValue>
       <search>
-        <query>| inputlookup item_sub_subtypes WHERE item_subtype=$item_subtype$</query>
+        <query>| inputlookup item_sub_subtypes WHERE item_subtype="$item_subtype$"</query>
         <earliest>-24h@h</earliest>
         <latest>now</latest>
       </search>
