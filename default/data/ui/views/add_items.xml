@@ -48,7 +48,7 @@
 | streamstats count</query>
       </search>
     </input>
-    <input type="dropdown" token="pack_qty" searchWhenChanged="true">
+    <input type="dropdown" id="pack_qty" token="pack_qty" searchWhenChanged="true">
       <label>Pack Quantity</label>
       <default>1</default>
       <initialValue>1</initialValue>
@@ -74,14 +74,14 @@
               <unset token="input_complete"></unset>
             </condition>
           </progress>
-          <query>| makeresults $pack_qty$
+          <query>| makeresults $pack_contains$
 | streamstats count AS pack_id
-| eval item_type="$item_type$", item_subtype="$item_subtype$", item_sub_subtype="$item_sub_subtype$", pack_qty="$pack_qty$"
+| eval item_type="$item_type$", item_subtype="$item_subtype$", item_sub_subtype="$item_sub_subtype$", pack_contains="$pack_contains$"
 | eval purchase_date=strftime(strptime("$purchase_date$", "%m/%d/%Y"), "%m/%d/%Y %H:%M:%S")
 | eval sealed_date=strftime(strptime("$sealed_date$", "%m/%d/%Y"), "%m/%d/%Y %H:%M:%S")
 | eval input_date=strftime(now(), "%m/%d/%Y %H:%M:%S") 
-| eval item_id=sha512(pack_id + input_date + item_type + item_subtype + item_sub_subtype + purchase_date + sealed_date + pack_qty)
-| table pack_id, item_id, input_date, item_type, item_subtype, item_sub_subtype, purchase_date, sealed_date, pack_qty</query>
+| eval item_id=sha512(pack_id + input_date + item_type + item_subtype + item_sub_subtype + purchase_date + sealed_date + pack_contains)
+| table pack_id, input_date, item_type, item_subtype, item_sub_subtype, purchase_date, sealed_date, pack_contains, item_id</query>
           <earliest>-24h@h</earliest>
           <latest>now</latest>
         </search>

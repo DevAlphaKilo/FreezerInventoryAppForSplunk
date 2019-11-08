@@ -28,12 +28,18 @@ function insertData(indexName, data, host, sourcetype) {
     });
 }
 
+function resetDropdowns(id) {
+	eval(id).val(undefined);
+}
+
 require(["jquery","splunkjs/mvc","splunkjs/mvc/simplexml/ready!"],
 function($, mvc){
 	// clear forms when updated
-	var item_type = mvc.Components.get('item_type');
-    var item_subtype = mvc.Components.get('item_subtype');
-	var item_sub_subtype = mvc.Components.get('item_sub_subtype');
+	$("div[class='input input-dropdown'").each(function( index ) {
+        //console.log(this.id);
+		var name = this.id;
+		window[name] = mvc.Components.get(this.id);
+    });
     item_type.on('change', function() { item_subtype.val(undefined); });
 	item_subtype.on('change', function() { item_sub_subtype.val(undefined); });
 	// submit button 'click' event
@@ -57,6 +63,7 @@ function($, mvc){
             tableResults[row_index] = rowResults;
           }  
         });
+		// post each generated event
         $.each(tableResults,function( result_index ) {
             // each result item 
             this["action"] = "added"
@@ -64,9 +71,10 @@ function($, mvc){
             console.log(data);
             insertData("test", data, "FreezerInventory", "freezer:item");
         });
-		
-		item_type.val(undefined);
-		item_subtype.val(undefined);
-		item_sub_subtype.val(undefined);
+		// reset dropdowns after posting events
+		$("div[class='input input-dropdown'").each(function( index ) {
+			//console.log(this.id);
+			mvc.Components.get(this.id).val(undefined);
+		});
     });
 });
