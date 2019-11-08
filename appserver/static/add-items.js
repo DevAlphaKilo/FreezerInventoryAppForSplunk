@@ -73,6 +73,7 @@ function($, mvc){
             mvc.Components.get(this.id).val(undefined);
         });
         // hide the temp item table after clearing input
-        mvc.Components.getInstance('submitted').unset("input_complete")
+        mvc.Components.getInstance('submitted').unset("input_complete");
+        mvc.Components.getInstance('default').unset("input_complete");
     });
 });
