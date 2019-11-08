@@ -30,6 +30,13 @@ function insertData(indexName, data, host, sourcetype) {
 
 require(["jquery","splunkjs/mvc/simplexml/ready!"],
 function($){
+	// clear forms when updated
+	var item_type = mvc.Components.get('item_type');
+    var item_subtype = mvc.Components.get('item_subtype');
+	var item_sub_subtype = mvc.Components.get('item_sub_subtype');
+    item_type.on('change', function() { item_subtype.val(undefined); });
+	item_subtype.on('change', function() { item_sub_subtype.val(undefined); });
+	// submit button 'click' event
     $("#submit_button").on("click", function (){
         var tableHeaders = {};
         var tableResults = {};
@@ -57,5 +64,9 @@ function($){
             console.log(data);
             insertData("test", data, "FreezerInventory", "freezer:item");
         });
+		
+		item_type.val(undefined);
+		item_subtype.val(undefined);
+		item_sub_subtype.val(undefined);
     });
 });
