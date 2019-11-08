@@ -1,2 +1,115 @@
-<dashboard>
-</dashboard>
+<form onunloadCancelJobs="true" hideFilters="true">
+  <fieldset submitButton="false">
+    <input type="time" token="timespan">
+      <label></label>
+      <default>
+        <earliest>-30d@d</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <single>
+        <title>Total Items</title>
+        <search>
+          <query>`freezer_items` 
+| stats dc(item_id)</query>
+          <earliest>$timespan.earliest$</earliest>
+          <latest>$timespan.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>Total Meat Items</title>
+        <search>
+          <query>`freezer_items` item_type="meat"
+| stats dc(item_id)</query>
+          <earliest>$timespan.earliest$</earliest>
+          <latest>$timespan.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>Total Vegetable Items</title>
+        <search>
+          <query>`freezer_items` item_type="vegetable"
+| stats dc(item_id)</query>
+          <earliest>$timespan.earliest$</earliest>
+          <latest>$timespan.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>Total Snack Items</title>
+        <search>
+          <query>`freezer_items` item_type="snack"
+| stats dc(item_id)</query>
+          <earliest>$timespan.earliest$</earliest>
+          <latest>$timespan.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <chart>
+        <title>Item Types</title>
+        <search>
+          <query>`freezer_items` 
+| stats count by item_type</query>
+          <earliest>$timespan.earliest$</earliest>
+          <latest>$timespan.latest$</latest>
+        </search>
+        <option name="charting.chart">pie</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.fieldColors">{"meat": #AF575A, "vegetable": #B6C75A, "snack": #4FA484, "ice": #62B3B2, "misc": #BD9872}</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>Item Subtypes</title>
+        <search>
+          <query>`freezer_items` 
+| stats count by item_subtype</query>
+          <earliest>$timespan.earliest$</earliest>
+          <latest>$timespan.latest$</latest>
+        </search>
+        <option name="charting.chart">pie</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.fieldColors">{"beef": #AF575A, "chicken": #AF575A,"pork": #AF575A, "fish": #AF575A, "frozen bag": #B6C75A, "popsicles": #4FA484, "icecream": #4FA484, "bag": #62B3B2 }</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <chart>
+        <title>Item additions</title>
+        <search>
+          <query>`freezer_items`
+| timechart span=1d usenull=false count by item_type</query>
+          <earliest>$timespan.earliest$</earliest>
+          <latest>$timespan.latest$</latest>
+        </search>
+        <option name="charting.axisTitleX.text">Time</option>
+        <option name="charting.axisTitleY.text">Items</option>
+        <option name="charting.chart">column</option>
+        <option name="charting.chart.stackMode">stacked</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.fieldColors">{"meat": #AF575A, "vegetable": #B6C75A, "snack": #4FA484, "ice": #62B3B2, "misc": #BD9872}</option>
+      </chart>
+    </panel>
+  </row>
+</form>
