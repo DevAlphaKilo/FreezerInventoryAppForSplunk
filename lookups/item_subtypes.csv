@@ -1,8 +1,13 @@
 item_type,item_subtype
 meat,beef
-meat,pork
 meat,chicken
-meat,fish
+meat,pork
+meat,venison
+meat,shrimp
+meat,cod
+meat,mahi-mahi
+meat,salmon
+meat,tilapia
 vegetable,frozen bag
 snack,popsicles
 snack,icecream
