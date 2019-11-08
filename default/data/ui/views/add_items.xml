@@ -1,6 +1,6 @@
 <form stylesheet="input-forms.css" script="add-items.js,autofill-date-today.js">
   <label>Add Item</label>
-  <fieldset submitButton="true" autoRun="true">
+  <fieldset submitButton="false" autoRun="true">
     <input type="dropdown" token="item_type">
       <label>Item Type</label>
       <fieldForLabel>item_types</fieldForLabel>
