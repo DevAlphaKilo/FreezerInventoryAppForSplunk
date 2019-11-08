@@ -28,21 +28,17 @@ function insertData(indexName, data, host, sourcetype) {
     });
 }
 
-function resetDropdowns(id) {
-	eval(id).val(undefined);
-}
-
 require(["jquery","splunkjs/mvc","splunkjs/mvc/simplexml/ready!"],
 function($, mvc){
-	// clear forms when updated
-	$("div[class='input input-dropdown'").each(function( index ) {
+    // clear forms when updated
+    $("div[class='input input-dropdown'").each(function( index ) {
         //console.log(this.id);
-		var name = this.id;
-		window[name] = mvc.Components.get(this.id);
+        var name = this.id;
+        window[name] = mvc.Components.get(this.id);
     });
     item_type.on('change', function() { item_subtype.val(undefined); });
-	item_subtype.on('change', function() { item_sub_subtype.val(undefined); });
-	// submit button 'click' event
+    item_subtype.on('change', function() { item_sub_subtype.val(undefined); });
+    // submit button 'click' event
     $("#submit_button").on("click", function (){
         var tableHeaders = {};
         var tableResults = {};
@@ -63,7 +59,7 @@ function($, mvc){
             tableResults[row_index] = rowResults;
           }  
         });
-		// post each generated event
+        // post each generated event
         $.each(tableResults,function( result_index ) {
             // each result item 
             this["action"] = "added"
@@ -71,10 +67,12 @@ function($, mvc){
             console.log(data);
             insertData("test", data, "FreezerInventory", "freezer:item");
         });
-		// reset dropdowns after posting events
-		$("div[class='input input-dropdown'").each(function( index ) {
-			//console.log(this.id);
-			mvc.Components.get(this.id).val(undefined);
-		});
+        // reset dropdowns after posting events
+        $("div[class='input input-dropdown'").each(function( index ) {
+            //console.log(this.id);
+            mvc.Components.get(this.id).val(undefined);
+        });
+        // hide the temp item table after clearing input
+        mvc.Components.getInstance('submitted').unset("input_complete")
     });
 });
