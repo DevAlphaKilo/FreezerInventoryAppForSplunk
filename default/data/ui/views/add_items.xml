@@ -23,7 +23,7 @@
       </search>
     </input>
     <input type="dropdown" token="item_sub_subtype" searchWhenChanged="true">
-      <label>Cut Type</label>
+      <label>Item Sub Subtype</label>
       <fieldForLabel>item_sub_subtype</fieldForLabel>
       <fieldForValue>item_sub_subtype</fieldForValue>
       <search>
