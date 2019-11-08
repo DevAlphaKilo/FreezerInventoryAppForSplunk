@@ -28,6 +28,17 @@ function insertData(indexName, data, host, sourcetype) {
     });
 }
 
+function resetForm(mvc) {
+    // reset dropdowns after posting events
+    $("div[class='input input-dropdown'").each(function( index ) {
+        //console.log(this.id);
+        mvc.Components.get(this.id).val(undefined);
+    });
+    // hide the temp item table after clearing input
+    mvc.Components.getInstance('submitted').unset("input_complete");
+    mvc.Components.getInstance('default').unset("input_complete");
+}
+
 require(["jquery","splunkjs/mvc","splunkjs/mvc/simplexml/ready!"],
 function($, mvc){
     // clear forms when updated
@@ -67,13 +78,7 @@ function($, mvc){
             console.log(data);
             insertData("test", data, "FreezerInventory", "freezer:item");
         });
-        // reset dropdowns after posting events
-        $("div[class='input input-dropdown'").each(function( index ) {
-            //console.log(this.id);
-            mvc.Components.get(this.id).val(undefined);
-        });
-        // hide the temp item table after clearing input
-        mvc.Components.getInstance('submitted').unset("input_complete");
-        mvc.Components.getInstance('default').unset("input_complete");
+        resetForm(mvc);
     });
+	$("#reset_button").on("click", function (){ resetForm(mvc); });
 });

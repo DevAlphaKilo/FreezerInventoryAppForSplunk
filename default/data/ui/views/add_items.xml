@@ -94,6 +94,7 @@
   <row>
     <panel>
       <html>
+        <input id="reset_button" type="button" value="Reset"/>
         <input id="submit_button" type="button" value="Submit Input"/>
         <br/>
         <br/>
