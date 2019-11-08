@@ -33,7 +33,7 @@ owner = nobody
 version = 8.0.0
 modtime = 1569865040.314465000
 
-[lookups/meat_cut_types.csv]
+[lookups/item_sub_subtypes.csv]
 access = read : [ * ], write : [ admin, power ]
 export = none
 owner = nobody
