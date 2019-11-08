@@ -1,7 +1,7 @@
 <form stylesheet="input-forms.css" script="add-items.js,autofill-date-today.js">
   <label>Add Item</label>
   <fieldset submitButton="true" autoRun="true">
-    <input type="dropdown" token="item">
+    <input type="dropdown" token="item_type">
       <label>Item Type</label>
       <fieldForLabel>item_types</fieldForLabel>
       <fieldForValue>item_types</fieldForValue>
@@ -11,13 +11,13 @@
         <latest>now</latest>
       </search>
     </input>
-    <input type="dropdown" token="subtype" searchWhenChanged="true">
+    <input type="dropdown" token="item_subtype" searchWhenChanged="true">
       <label>Subtype</label>
       <fieldForLabel>item_subtype</fieldForLabel>
       <fieldForValue>item_subtype</fieldForValue>
       <search>
         <query>| inputlookup item_subtypes
-| search item_type=$item$</query>
+| search item_type=$item_type$</query>
         <earliest>-4h@m</earliest>
         <latest>now</latest>
       </search>
