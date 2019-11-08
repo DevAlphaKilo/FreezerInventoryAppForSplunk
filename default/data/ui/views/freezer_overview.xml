@@ -1,4 +1,5 @@
 <form onunloadCancelJobs="true" hideFilters="true">
+  <label>Freezer Overview</label>
   <fieldset submitButton="false">
     <input type="time" token="timespan">
       <label></label>
