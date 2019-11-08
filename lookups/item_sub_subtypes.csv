@@ -1,0 +1,36 @@
+item_subtype,item_sub_subtype
+beef,ground 70/30
+beef,ground 80/20
+beef,ground 90/10
+beef,ground 93/07
+beef,steak (ny strip)
+beef,steak (filet)
+beef,steak (sirloin)
+beef,steak (ribeye)
+beef,hamburger
+beef,hotdog
+beef,sausage
+pork,chop
+pork,loin
+pork,sausage
+chicken,ground 90/10
+chicken,ground 93/07
+chicken,wings
+chicken,breast
+chicken,thighs
+chicken,sausage
+cod,sticks
+cod,filet
+mahi-mahi,filet
+salmon,filet
+shrimp,bag
+talapia,filet
+frozen bag,small
+frozen bag,medium
+frozen bag,large
+popsicles,box
+popsicles,bag
+icecream,bar
+icecream,tub
+bag,10lb
+bag,20lb

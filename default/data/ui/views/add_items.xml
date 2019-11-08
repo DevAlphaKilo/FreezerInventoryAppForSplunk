@@ -22,12 +22,12 @@
         <latest>now</latest>
       </search>
     </input>
-    <input type="dropdown" token="cut_type" searchWhenChanged="true">
+    <input type="dropdown" token="item_sub_subtype" searchWhenChanged="true">
       <label>Cut Type</label>
-      <fieldForLabel>cut_type</fieldForLabel>
-      <fieldForValue>cut_type</fieldForValue>
+      <fieldForLabel>item_sub_subtype</fieldForLabel>
+      <fieldForValue>item_sub_subtype</fieldForValue>
       <search>
-        <query>| inputlookup meat_cut_types</query>
+        <query>| inputlookup item_sub_subtype</query>
         <earliest>-24h@h</earliest>
         <latest>now</latest>
       </search>
@@ -77,12 +77,12 @@
           </progress>
           <query>| makeresults $pack_qty$
 | streamstats count AS pack_id
-| eval item_type="$item_type$", item_subtype="$item_subtype$", cut_type="$cut_type$", cut_qty="$cut_qty$"
+| eval item_type="$item_type$", item_subtype="$item_subtype$", item_sub_subtype="$item_sub_subtype$", cut_qty="$cut_qty$"
 | eval purchase_date=strftime(strptime("$purchase_date$", "%m/%d/%Y"), "%m/%d/%Y %H:%M:%S")
 | eval sealed_date=strftime(strptime("$sealed_date$", "%m/%d/%Y"), "%m/%d/%Y %H:%M:%S")
 | eval input_date=strftime(now(), "%m/%d/%Y %H:%M:%S") 
-| eval item_id=sha512(pack_id + input_date + item_type + item_subtype + cut_type + purchase_date + sealed_date + cut_qty)
-| table pack_id, item_id, input_date, item_type, item_subtype, cut_type, purchase_date, sealed_date, cut_qty</query>
+| eval item_id=sha512(pack_id + input_date + item_type + item_subtype + item_sub_subtype + purchase_date + sealed_date + cut_qty)
+| table pack_id, item_id, input_date, item_type, item_subtype, item_sub_subtype, purchase_date, sealed_date, cut_qty</query>
           <earliest>-24h@h</earliest>
           <latest>now</latest>
         </search>
@@ -116,7 +116,7 @@
             </condition>
           </progress>
           <query>`freezer_items`
-| stats values(item_id) count by _time, item_type, item_subtype, cut_type
+| stats values(item_id) count by _time, item_type, item_subtype, item_sub_subtype
 | sort - _time
 | rename _time AS "Time"
 | eval Time=strftime(Time, "%m/%d/%y %H:%M:%S")</query>
