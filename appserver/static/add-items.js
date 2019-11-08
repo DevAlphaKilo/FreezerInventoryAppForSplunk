@@ -1,6 +1,34 @@
-require([ 	"jquery",
-			"splunkjs/mvc/simplexml/ready!"
-		],
+
+var splunkWebHttp = new splunkjs.SplunkWebHttp();
+var service = new splunkjs.Service(splunkWebHttp);
+var indexes = service.indexes();
+function insertData(indexName, data, host, sourcetype) {
+    // first get the index to use 
+    indexes.fetch(function(err, indexes) {
+        var myIndex = indexes.item(indexName);
+        if (myIndex) {
+            // console.log("Found " + myIndex.name + " index");
+        } else {
+            // console.log("Error!  Could not find index named " + indexName);
+            return null;
+        }
+        // ******  Need to loop through JSON by items or text by line
+        // Now loop through the data and insert each row or record
+        //  lookup the sourcetype from the samples array and find the parse_method  (line | array)
+        var parse_method = "line";
+        // console.log("parsing as line");
+        fileLines = data.split("\n")
+        for (var i = 0; i < fileLines.length; i++) {
+            // Submit an event to the index
+            myIndex.submitEvent(fileLines[i], { host: host, sourcetype: sourcetype },
+                function(err, result, myIndex) {
+                    // console.log("Submitted event: ", result, "sourcetype:", sourcetype, "host:", host);
+                });
+        }
+    });
+}
+
+require(["jquery","splunkjs/mvc/simplexml/ready!"],
 function($){
     $("#submit_button").on("click", function (){
         var tableHeaders = {};
@@ -23,8 +51,10 @@ function($){
           }  
         });
         $.each(tableResults,function( result_index ) {
-          // each result item 
-          console.log(JSON.stringify(this));
+            // each result item 
+            console.log(JSON.stringify(this));
+		    data = JSON.stringify(this);
+			insertData("test", data, "FreezerInventory", "freezer:item")		
         });
     });
 });
