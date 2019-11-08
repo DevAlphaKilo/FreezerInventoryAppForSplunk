@@ -4,7 +4,7 @@
     <input type="time" token="timespan">
       <label></label>
       <default>
-        <earliest>-30d@d</earliest>
+        <earliest>-7d@d</earliest>
         <latest>now</latest>
       </default>
     </input>
