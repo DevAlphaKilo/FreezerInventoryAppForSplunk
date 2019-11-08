@@ -74,7 +74,7 @@
               <unset token="input_complete"></unset>
             </condition>
           </progress>
-          <query>| makeresults $pack_contains$
+          <query>| makeresults $pack_qty$
 | streamstats count AS pack_id
 | eval item_type="$item_type$", item_subtype="$item_subtype$", item_sub_subtype="$item_sub_subtype$", pack_contains="$pack_contains$"
 | eval purchase_date=strftime(strptime("$purchase_date$", "%m/%d/%Y"), "%m/%d/%Y %H:%M:%S")
