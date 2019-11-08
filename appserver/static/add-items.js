@@ -28,8 +28,8 @@ function insertData(indexName, data, host, sourcetype) {
     });
 }
 
-require(["jquery","splunkjs/mvc/simplexml/ready!"],
-function($){
+require(["jquery","splunkjs/mvc","splunkjs/mvc/simplexml/ready!"],
+function($, mvc){
 	// clear forms when updated
 	var item_type = mvc.Components.get('item_type');
     var item_subtype = mvc.Components.get('item_subtype');
