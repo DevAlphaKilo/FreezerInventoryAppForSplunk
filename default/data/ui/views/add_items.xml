@@ -76,12 +76,12 @@
           </progress>
           <query>| makeresults $pack_qty$
 | streamstats count AS pack_id
-| eval item_type="$item_type$", item_subtype="$item_subtype$", item_sub_subtype="$item_sub_subtype$", cut_qty="$cut_qty$"
+| eval item_type="$item_type$", item_subtype="$item_subtype$", item_sub_subtype="$item_sub_subtype$", pack_qty="$pack_qty$"
 | eval purchase_date=strftime(strptime("$purchase_date$", "%m/%d/%Y"), "%m/%d/%Y %H:%M:%S")
 | eval sealed_date=strftime(strptime("$sealed_date$", "%m/%d/%Y"), "%m/%d/%Y %H:%M:%S")
 | eval input_date=strftime(now(), "%m/%d/%Y %H:%M:%S") 
-| eval item_id=sha512(pack_id + input_date + item_type + item_subtype + item_sub_subtype + purchase_date + sealed_date + cut_qty)
-| table pack_id, item_id, input_date, item_type, item_subtype, item_sub_subtype, purchase_date, sealed_date, cut_qty</query>
+| eval item_id=sha512(pack_id + input_date + item_type + item_subtype + item_sub_subtype + purchase_date + sealed_date + pack_qty)
+| table pack_id, item_id, input_date, item_type, item_subtype, item_sub_subtype, purchase_date, sealed_date, pack_qty</query>
           <earliest>-24h@h</earliest>
           <latest>now</latest>
         </search>
