@@ -53,8 +53,8 @@ function($){
         $.each(tableResults,function( result_index ) {
             // each result item 
             console.log(JSON.stringify(this));
-		    data = JSON.stringify(this);
-			insertData("test", data, "FreezerInventory", "freezer:item")		
+            data = JSON.stringify(this);
+            insertData("test", data, "FreezerInventory", "freezer:item");
         });
     });
 });
