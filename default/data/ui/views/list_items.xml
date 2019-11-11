@@ -1,0 +1,10 @@
+<dashboard script="list-items.js">
+  <label>Items List</label> 
+  <row>
+    <panel>
+      <html>
+        <div id="myTable"></div>
+      </html>
+    </panel>
+ </row>
+</dashboard>
