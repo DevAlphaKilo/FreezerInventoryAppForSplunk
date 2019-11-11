@@ -74,6 +74,7 @@ function($, mvc){
         $.each(tableResults,function( result_index ) {
             // each result item 
             this["action"] = "added"
+			this["status"] = "available"
             data = JSON.stringify(this);
             console.log(data);
             insertData("test", data, "FreezerInventory", "freezer:item");
