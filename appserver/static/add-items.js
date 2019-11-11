@@ -28,6 +28,24 @@ function insertData(indexName, data, host, sourcetype) {
     });
 }
 
+//function insertData() {
+//	$.ajax({
+//        url: 'https://' + window.location.hostname + ':8088/services/collector/event',
+//        type: 'POST',
+//        async: false,
+//        data: JSON.stringify({ "event": record }),
+//        beforeSend: function(xhr) { xhr.setRequestHeader('Authorization', 'Splunk 1dg3235-ca51-439c-b816-64cf1963b251'); },
+//        success: function(data, textStatus, xhr) {
+//            $("#results").html("Success! <a href=\"" + window.location.origin + "/app/search/search?q=search%20index=_internal%20sourcetype=testdata\" target=\"_blank\">Launch Search for Data</a>")
+//        },
+//        error: function(xhr, textStatus, error) {
+//            console.error("Error!", error);
+//            $("#results").html("<p style=\"margin-top: 10px;\">Failure! Check the console for details... but probably it's because of a certificate error, unless you happen to have a valid certificate on your Splunk environment. The next leading cause of a failure here would be that there is a load balancer or firewall that's preventing access to that port.</p>")
+//        }
+//    })
+//
+//}
+
 function resetForm(mvc) {
     // reset dropdowns after posting events
     $("div[class='input input-dropdown'").each(function( index ) {
@@ -79,6 +97,25 @@ function($, mvc){
             console.log(data);
             insertData("test", data, "FreezerInventory", "freezer:item");
         });
+		var modal = ''+
+'<div class="modal fade" id="post_success">' +
+'  <div class="modal-dialog model-sm">' +
+'    <div class="modal-content">' +
+'      <div class="modal-header">' +
+'        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
+'        <h4 class="modal-title">Post Successful</h4>' +
+'      </div>' +
+'      <div class="modal-body">' +
+'        <p>Your items have been added to your freezer inventory.</p>' +
+'      </div>' +
+'      <div class="modal-footer">' +
+'        <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>' +
+'      </div>' +
+'    </div>' +
+'  </div>' +
+'</div>';
+        $('body').prepend(modal);
+        $('#post_success').modal('show');
         resetForm(mvc);
     });
 	$("#reset_button").on("click", function (){ resetForm(mvc); });
