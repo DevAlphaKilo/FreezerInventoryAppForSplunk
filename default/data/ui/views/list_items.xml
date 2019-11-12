@@ -1,4 +1,4 @@
-<dashboard script="list-items.js">
+<dashboard script="list-items.js" stylesheet="list-items.css">
   <label>Items List</label> 
   <row>
     <panel>

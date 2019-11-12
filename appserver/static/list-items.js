@@ -1,80 +1,62 @@
-
-var splunkWebHttp = new splunkjs.SplunkWebHttp();
-var service = new splunkjs.Service(splunkWebHttp);
-
 require([
+     'underscore',
      'jquery',
      'splunkjs/mvc',
+     'splunkjs/mvc/searchmanager',
      'splunkjs/mvc/tableview',
      'splunkjs/mvc/simplexml/ready!'
 ],
-function($, mvc, TableView){
-    // Search everything and return the first 100 results
-    var searchQuery = "| inputlookup freezer_items";
-
-    // Set the search parameters
-    var searchParams = {
-      exec_mode: "normal",
-      earliest_time: "-15m@m"
+function(_, $, mvc, SearchManager, TableView){
+    	
+	// Translations from rangemap results to CSS class
+    var ICONS = {
+        edit: 'settings',
+		delete: 'x'
     };
-
-    // Run a normal search that immediately returns the job's SID
-    service.search(
-      searchQuery,
-      searchParams,
-      function(err, job) {
-
-        // Display the job's search ID
-        console.log("Job SID: ", job.sid);
-
-        // Poll the status of the search job
-        job.track({period: 200}, {
-          done: function(job) {
-            console.log("Done!");
-
-            // Print out the statics
-            console.log("Job statistics:");
-            console.log("  Event count:  " + job.properties().eventCount); 
-            console.log("  Result count: " + job.properties().resultCount);
-            console.log("  Disk usage:   " + job.properties().diskUsage + " bytes");
-            console.log("  Priority:     " + job.properties().priority);
-
-            // Get the results and print them
-            job.results({}, function(err, results, job) {
-              var fields = results.fields;
-              var rows = results.rows;
-              for(var i = 0; i < rows.length; i++) {
-                var values = rows[i];
-                console.log("Row " + i + ": ");
-                for(var j = 0; j < values.length; j++) {
-                  var field = fields[j];
-                  var value = values[j];
-                  console.log("  " + field + ": " + value);
-                }
-              }
-            });
-            
-          },
-          failed: function(job) {
-            console.log("Job failed")
-          },
-          error: function(err) {
-            done(err);
-          }
-        });
-
-      }
-    );
-
-    var TableView =  
-    var element1 = new TableView({
-    id: "element1",
-    count: 10,
-    dataOverlayMode: "none",
-    drilldown: "cell",
-    rowNumbers: "false",
-    wrap: "true",
-    managerid: "search1",
-    el: $("#myTable")
+	
+	var CustomCellRenderer = TableView.BaseCellRenderer.extend({
+        canRender: function(cell) {
+            // Enable this custom cell renderer for 
+            return _(['edit','delete']).contains(cell.field);
+        },
+        render: function($td, cell) {
+            var icon = 'question';
+            // Fetch the icon for the value
+            if (ICONS.hasOwnProperty(cell.field)) {
+                icon = ICONS[cell.field];
+                // Create the icon element and add it to the table cell
+                $td.addClass('icon').html(_.template('<div style="float:left; max-height:22px; margin:0px;"><i class="icon-<%-icon%>"></i></div>', {
+                    icon: icon,
+                }));
+            }
+        }
     });
+
+	// Set up search managers
+    var search_items = new SearchManager({
+        id: "freezer_items",
+        search: "| inputlookup freezer_items | table edit, id, status, type, subtype, sub_subtype, purchase_date, sealed_date",
+        earliest_time: "-15m",
+        latest_time: "now",
+        preview: true,
+        cache: true,
+		cancelOnUnload: true
+    });
+	
+    // Create a table
+    var myTableObj = new TableView({
+        id: "myTable_rendered",
+        managerid: "freezer_items",
+		drilldown: "none",
+		pageSize: "10",
+		showPager: true,
+		"link.exportResults.visible": true,
+		"link.openSearch.visible": false,
+		"link.visible": true,
+        el: $("#myTable")
+    })
+	
+	myTableObj.addCellRenderer(new CustomCellRenderer());
+	console.log(myTableObj);
+	myTableObj.render();
 });
