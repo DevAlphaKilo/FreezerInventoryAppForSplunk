@@ -130,7 +130,7 @@ class ItemsEndpoint(PersistentServerConnectionApplication):
 
         return self.response(items, httplib.OK)
         
-    def _post_item(self, sessionKey, query_params, post_data):
+    def _post_item(self, sessionKey, user, post_data):
         logger.debug("START _post_item()")
         required = ['item_data']
         missing = [r for r in required if r not in post_data]
