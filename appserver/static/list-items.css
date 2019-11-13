@@ -1,6 +1,35 @@
-.dashboard-row .dashboard-panel .panel-body.html {
-  padding:0px;
-  margin:0px;
+
+/* Custom Cell Icons */
+td.icon {
+  text-align: center;
+}
+td.icon i {
+  font-size: 25px;
+  text-shadow: 1px 1px #aaa;
+}
+.icon-inline i {
+  font-size: 18px;
+}
+
+td.table_inline_icon {
+  width: 13px;
+  border-right: 1px solid #d5d5d5;
+}
+
+/* #myTable panel */
+
+/* Hidden Cells */
+#myTable .id,
+#myTable [data\-sort\-key='id'],
+#myTable .status,
+#myTable [data\-sort\-key='status'],
+#myTable .input_date,
+#myTable [data\-sort\-key='input_date'],
+#myTable .type,
+#myTable [data\-sort\-key='type'],
+#myTable .action,
+#myTable [data\-sort\-key='action']  {
+  display:none;
 }
 
 #myTable [data\-sort\-key='edit'] {
@@ -14,4 +43,9 @@
 #myTable [data\-sort\-key='edit'] a {
   /* color:transparent !important; */
   display:none;  
+}
+
+.dashboard-row .dashboard-panel .panel-body.html {
+  padding:0px;
+  margin:0px;
 }
