@@ -13,7 +13,7 @@ import splunk.rest as rest
 dir = os.path.join(util.get_apps_dir(), 'FreezerInventoryAppForSplunk', 'bin', 'lib')
 if not dir in sys.path:
     sys.path.append(dir)
-	
+    
 from FreezerInventoryLogger import *
    
 logger = setupLogger('freezer_inventory')
@@ -89,7 +89,6 @@ class ItemsEndpoint(PersistentServerConnectionApplication):
         except KeyError:
             return self.response("Failed to obtain auth token", httplib.UNAUTHORIZED)
 
-
         required = ['action']
         missing = [r for r in required if r not in post_data]
         if missing:
@@ -117,19 +116,46 @@ class ItemsEndpoint(PersistentServerConnectionApplication):
         return {'status': status, 'payload': payload}
 
     def _get_items(self, sessionKey, query_params):
-        logger.debug("START _list_item_details()")
-
+        logger.debug("START _get_items()")
         splunk.setDefault('sessionKey', sessionKey)
-        
+
         items_uri = '/servicesNS/nobody/FreezerInventoryAppForSplunk/storage/collections/data/items?output_mode=json'
-        
+
         # Get item json
         serverResponse, serverContent = rest.simpleRequest(items_uri, sessionKey=sessionKey, method='GET')
         logger.debug("items: %s" % serverContent)
         items = json.loads(serverContent)
 
         return self.response(items, httplib.OK)
-        
+
+    def _get_item_info(self, sessionKey, query_params):
+        logger.debug("START _get_item_info()")
+        required = ['_key','id']
+        missing = [r for r in required if r not in query_params]
+        if len(missing) > 1:
+            return self.response("Missing required arguments: %s" % missing, httplib.BAD_REQUEST)
+
+        splunk.setDefault('sessionKey', sessionKey)
+
+        if '_key' in query_params:
+            item_id = query_params.pop('_key')
+        else:
+            item_id = query_params.pop('id')
+            all_items = self._get_items(sessionKey, query_params)
+            logger.debug("all_items: %s" % all_items)
+            for item in all_items['payload']:
+                if item['id'] == item_id:
+                    item_id = item['_key']
+
+        items_uri = '/servicesNS/nobody/FreezerInventoryAppForSplunk/storage/collections/data/items/%s' % item_id
+
+        # Get item json
+        serverResponse, serverContent = rest.simpleRequest(items_uri, sessionKey=sessionKey, method='GET')
+        logger.debug("item_info: %s" % serverContent)
+        item_info = json.loads(serverContent)
+
+        return self.response(item_info, httplib.OK)
+
     def _post_item(self, sessionKey, user, post_data):
         logger.debug("START _post_item()")
         required = ['item_data']
