@@ -14,20 +14,22 @@
       <single>
         <title>Total Items</title>
         <search>
-          <query>`freezer_items` 
-| stats dc(item_id)</query>
+          <query>| `freezer_items` 
+| stats dc(id)</query>
           <earliest>$timespan.earliest$</earliest>
           <latest>$timespan.latest$</latest>
         </search>
         <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
       </single>
     </panel>
     <panel>
       <single>
         <title>Total Meat Items</title>
         <search>
-          <query>`freezer_items` item_type="meat"
-| stats dc(item_id)</query>
+          <query>| `freezer_items` 
+| search type="meat"
+| stats dc(id)</query>
           <earliest>$timespan.earliest$</earliest>
           <latest>$timespan.latest$</latest>
         </search>
@@ -39,8 +41,9 @@
       <single>
         <title>Total Vegetable Items</title>
         <search>
-          <query>`freezer_items` item_type="vegetable"
-| stats dc(item_id)</query>
+          <query>| `freezer_items` 
+| search type="vegetable"
+| stats dc(id)</query>
           <earliest>$timespan.earliest$</earliest>
           <latest>$timespan.latest$</latest>
         </search>
@@ -52,8 +55,9 @@
       <single>
         <title>Total Snack Items</title>
         <search>
-          <query>`freezer_items` item_type="snack"
-| stats dc(item_id)</query>
+          <query>| `freezer_items` 
+| search type="snack"
+| stats dc(id)</query>
           <earliest>$timespan.earliest$</earliest>
           <latest>$timespan.latest$</latest>
         </search>
@@ -67,8 +71,8 @@
       <chart>
         <title>Item Types</title>
         <search>
-          <query>`freezer_items` 
-| stats count by item_type</query>
+          <query>| `freezer_items` 
+| stats count by type</query>
           <earliest>$timespan.earliest$</earliest>
           <latest>$timespan.latest$</latest>
         </search>
@@ -82,8 +86,8 @@
       <chart>
         <title>Item Subtypes</title>
         <search>
-          <query>`freezer_items` 
-| stats count by item_subtype</query>
+          <query>| `freezer_items` 
+| stats count by subtype</query>
           <earliest>$timespan.earliest$</earliest>
           <latest>$timespan.latest$</latest>
         </search>
@@ -99,8 +103,9 @@
       <chart>
         <title>Item additions</title>
         <search>
-          <query>`freezer_items`
-| timechart span=1d usenull=false count by item_type</query>
+          <query>| `freezer_items`
+| eval "_time"=input_date
+| timechart span=1d usenull=false count by type</query>
           <earliest>$timespan.earliest$</earliest>
           <latest>$timespan.latest$</latest>
         </search>
@@ -110,6 +115,7 @@
         <option name="charting.chart.stackMode">stacked</option>
         <option name="charting.drilldown">none</option>
         <option name="charting.fieldColors">{"meat": #AF575A, "vegetable": #B6C75A, "snack": #4FA484, "ice": #62B3B2, "misc": #BD9872}</option>
+        <option name="refresh.display">progressbar</option>
       </chart>
     </panel>
   </row>
