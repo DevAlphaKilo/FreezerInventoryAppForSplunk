@@ -25,8 +25,18 @@ function showModalItemDetails (splunkUtil, item) {
 								  '      <label for="location" class="control-label">Storage Location:</label>' +
 								  '        <div class="controls"><select name="status" id="location" disabled="disabled"></select></div>' +
 								  '    </div>';
-	var section_footer_location= '</div>';
+	var section_footer_location = '</div>';
 	var section_location = section_header_location + section_body_location + section_footer_location;
+	
+	var delete_item_uri = splunkUtil.make_url('/splunkd/__raw/services/freezer_inventory/items?action=delete_item&id=' + item["id"]);
+	
+	var section_header_delete = '<div>' +
+	                              '  <h5 class="delete-header">Delete Item</h5>';
+	var section_body_delete   = '  <div class="delete-row"><div class="delete-label"></div><div class="delete-value">' +
+                                '<a href="' + delete_item_uri + '">DELETE THIS ITEM</a>' +
+								'</div></div>';
+	var section_footer_delete = '</div>';
+	var section_delete = section_header_delete + section_body_delete + section_footer_delete;
 
 	var modal = ''+
 				'<div class="modal fade" id="item_options">' +
@@ -40,6 +50,8 @@ function showModalItemDetails (splunkUtil, item) {
 						 section_item_details + 
 				'        <hr>' +
 						 section_location + 
+				'        <hr>' +
+						 section_delete + 
 				'      </div>' +
 				'      <div class="modal-footer">' +
                 '        <button type="button" class="btn cancel modal-btn-cancel pull-left" data-dismiss="modal">Cancel</button>' +

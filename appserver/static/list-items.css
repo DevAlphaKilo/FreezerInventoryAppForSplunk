@@ -53,7 +53,8 @@ td.table_inline_icon {
 /* #item_options modal */
 
 .item-details-header,
-.location-header {
+.location-header,
+.delete-header {
 	font-weight: bold;
 	text-decoration: underline;
 }
@@ -78,3 +79,7 @@ td.table_inline_icon {
     padding-right: 50px;
 }
 
+.delete-row {
+	display: block;
+	text-align: center;
+}
