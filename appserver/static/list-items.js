@@ -72,7 +72,7 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView){
                 rowColMapping[cell.field] = index;
             });
 			
-			var search_string = "| `freezer_items` | search id=\"" + rowData.values[rowColMapping["id"]] + "\" | eval input_date=strftime(input_date, \"%m/%d/%Y %H:%M:%S\"), sealed_date=strftime(sealed_date, \"%m/%d/%Y %H:%M:%S\"), purchase_date=strftime(purchase_date, \"%m/%d/%Y %H:%M:%S\") | table edit, id, status, input_date, type, subtype, sub_subtype, purchase_date, sealed_date, pack_contains, action | transpose | rename column AS \"key\", \"row 1\" AS \"value\"";
+			var search_string = "| `freezer_items` | search id=\"" + rowData.values[rowColMapping["id"]] + "\" | eval input_date=strftime(input_date, \"%m/%d/%Y %H:%M:%S\"), sealed_date=strftime(sealed_date, \"%m/%d/%Y %H:%M:%S\"), purchase_date=strftime(purchase_date, \"%m/%d/%Y %H:%M:%S\") | table edit, id, status, input_date, type, subtype, sub_subtype, purchase_date, sealed_date, pack_contains | transpose | rename column AS \"field\", \"row 1\" AS \"value\"";
 			
 			this._detailsSearchManager.set({
                 search: search_string,
@@ -89,7 +89,7 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView){
                 managerid: 'item_details',
                 'drilldown': 'none',
                 'wrap': true,
-                'displayRowNumbers': true,
+                'displayRowNumbers': false,
                 'pageSize': '20',
                 //'el': $("#incident_details_exp")
             });
@@ -97,8 +97,13 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView){
             this._detailsSearchManager.on("search:start", function(state, job){
                 console.log("Detail Search starting...")
             });
-
+			
+			var section_header_item_details = '<hr><h3 class="section_header">Item Details</h3>';
+			var section_footer_item_details = '<hr>';
+			
+			$container.append(section_header_item_details);
             $container.append(this._detailsTableView.render().el);
+			$container.append(section_footer_item_details);
 		},
         render: function($container, rowData) {
 			
@@ -154,28 +159,26 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView){
             var item_input_date=($(this).parent().find("td.input_date")[0].innerHTML);
             //console.log("id", item_id)
             
-            var json = {};
-			
-			
+            var json = {};			
             
             var rest_url = splunkUtil.make_url('/splunkd/__raw/services/freezer_inventory/items?action=get_item_info&id=' + item_id);
             var item_data = $.get(rest_url, function(data, status) {
 				
-				var add_modal = '        <div class="form form-horizontal form-complex" style="display: block;">';
+				//var add_modal = '        <div class="form form-horizontal form-complex" style="display: block;">';
                 //console.log(data);
                 //console.log(status);
                 $.each(data, function(key, value) { 
 				    json[key] = value;
-					gen_modal = '          <div class="control-group shared-controls-controlgroup">' +
-								'            <label for="' + key + '" class="control-label">' + key + ':</label>' +
-								'            <div class="controls controls-block"><div class="control shared-controls-labelcontrol" id="' + key + '"><span class="input-label-' + key + '">' + value + '</span></div></div>' +
-								'          </div>'	
-                    add_modal = add_modal + gen_modal;
+					//gen_modal = '          <div class="control-group shared-controls-controlgroup">' +
+					//			'            <label for="' + key + '" class="control-label">' + key + ':</label>' +
+					//			'            <div class="controls controls-block"><div class="control shared-controls-labelcontrol" id="' + key + '"><span class="input-label-' + key + '">' + value + '</span></div></div>' +
+					//			'          </div>'	
+                   //add_modal = add_modal + gen_modal;
 				});
 				
-				add_modal = add_modal + '        </div>'
-				console.log("add_modal:", add_modal);				
-				$('.modal-body').append(add_modal);
+				//add_modal = add_modal + '        </div>'
+				//console.log("add_modal:", add_modal);				
+				//$('.modal-body').append(add_modal);
             }, "json");			
 			                    
             console.log("json_data:", json);
