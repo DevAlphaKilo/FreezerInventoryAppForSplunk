@@ -49,3 +49,32 @@ td.table_inline_icon {
   padding:0px;
   margin:0px;
 }
+
+/* #item_options modal */
+
+.item-details-header,
+.location-header {
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.item-details-row {
+	display: block;
+}
+
+.item-details-label {
+	float: left;
+	font-weight: bold;
+	width: 50px;
+	padding-right: 60px;
+	margin: 0px;
+}
+
+.item-details-value {
+    display: block;
+    overflow: hidden;
+    overflow-wrap: break-word;
+    padding: 2px;
+    padding-right: 50px;
+}
+

@@ -1,3 +1,67 @@
+
+function showModalItemDetails (splunkUtil, item) {
+	
+	//$.each(data, function(key, value) { 
+	//    item[key] = value;
+	//    //gen_modal = '          <div class="control-group shared-controls-controlgroup">' +
+	//    //            '            <label for="' + key + '" class="control-label">' + key + ':</label>' +
+	//    //            '            <div class="controls controls-block"><div class="control shared-controls-labelcontrol" id="' + key + '"><span class="input-label-' + key + '">' + value + '</span></div></div>' +
+	//    //            '          </div>'    
+	//   //add_modal = add_modal + gen_modal;
+	//});
+	
+	var section_header_item_details = '<div>' +
+	                                  '  <h5 class="item-details-header">Item Details</h5>';
+	var section_body_item_details   = '  <div class="item-details-row"><div class="item-details-label">ID:</div><div class="item-details-value">' + item["id"] + '</div></div>' +
+	                                  '  <div class="item-details-row"><div class="item-details-label">Type:</div><div class="item-details-value">' + item["type"] + '</div></div>' +
+	                                  '  <div class="item-details-row"><div class="item-details-label">Subtype:</div><div class="item-details-value">' + item["subtype"] + '</div></div>' +
+	                                  '  <div class="item-details-row"><div class="item-details-label">Sub_Subtype:</div><div class="item-details-value">' + item["sub_subtype"] + '</div></div>';
+	var section_footer_item_details = '</div>';
+	var section_item_details = section_header_item_details + section_body_item_details + section_footer_item_details;
+	
+	var section_header_location = '<div>' +
+	                              '  <h5 class="location-header">Update Item</h5>';
+	var section_body_location   = '    <div class="control-group shared-controls-controlgroup">' +
+								  '      <label for="location" class="control-label">Storage Location:</label>' +
+								  '        <div class="controls"><select name="status" id="location" disabled="disabled"></select></div>' +
+								  '    </div>';
+	var section_footer_location= '</div>';
+	var section_location = section_header_location + section_body_location + section_footer_location;
+
+	var modal = ''+
+				'<div class="modal fade" id="item_options">' +
+				'  <div class="modal-dialog model-sm">' +
+				'    <div class="modal-content">' +
+				'      <div class="modal-header">' +
+				'        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
+				'        <h4 class="modal-title">Item Options</h4>' +
+				'      </div>' +
+				'      <div class="modal-body">' +
+						 section_item_details + 
+				'        <hr>' +
+						 section_location + 
+				'      </div>' +
+				'      <div class="modal-footer">' +
+                '        <button type="button" class="btn cancel modal-btn-cancel pull-left" data-dismiss="modal">Cancel</button>' +
+				'        <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>' +
+				'      </div>' +
+				'    </div>' +
+				'  </div>' +
+				'</div>';
+	$('body').prepend(modal);
+	$('#item_options').modal('show');
+	
+	var rest_url = splunkUtil.make_url('/splunkd/__raw/services/freezer_inventory/items?action=get_freezers');
+	$.getJSON(rest_url, function(data, status) {
+		// each freezer in collection
+		$("#location").select2();
+		$.each(data, function(index, freezer) {
+			if (freezer["active"]) { $('#location').append( $('<option></option>').val(freezer["name"]).html(freezer["name"]) ); }
+		});		
+	}, "json");
+	$("#location").prop("disabled", false);	
+}
+
 require([
      'underscore',
      'jquery',
@@ -60,31 +124,31 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView){
             });
 
         },
-		canRender: function(rowData) {
+        canRender: function(rowData) {
             // Print the rowData object to the console
             console.log("RowData: ", rowData);
             return true;
         },
-		setup: function($container,rowData) {
-			var rowColMapping = {};
+        setup: function($container,rowData) {
+            var rowColMapping = {};
 
             $.each(rowData.cells, function(index, cell) {
                 rowColMapping[cell.field] = index;
             });
-			
-			var search_string = "| `freezer_items` | search id=\"" + rowData.values[rowColMapping["id"]] + "\" | eval input_date=strftime(input_date, \"%m/%d/%Y %H:%M:%S\"), sealed_date=strftime(sealed_date, \"%m/%d/%Y %H:%M:%S\"), purchase_date=strftime(purchase_date, \"%m/%d/%Y %H:%M:%S\") | table edit, id, status, input_date, type, subtype, sub_subtype, purchase_date, sealed_date, pack_contains | transpose | rename column AS \"field\", \"row 1\" AS \"value\"";
-			
-			this._detailsSearchManager.set({
+            
+            var search_string = "| `freezer_items` | search id=\"" + rowData.values[rowColMapping["id"]] + "\" | eval input_date=strftime(input_date, \"%m/%d/%Y %H:%M:%S\"), sealed_date=strftime(sealed_date, \"%m/%d/%Y %H:%M:%S\"), purchase_date=strftime(purchase_date, \"%m/%d/%Y %H:%M:%S\") | table edit, id, status, input_date, type, subtype, sub_subtype, purchase_date, sealed_date, pack_contains | transpose | rename column AS \"field\", \"row 1\" AS \"value\"";
+            
+            this._detailsSearchManager.set({
                 search: search_string,
                 earliest_time: "-15m",
-				latest_time: "now",
+                latest_time: "now",
                 autostart: false,
-				cancelOnUnload: true
+                cancelOnUnload: true
             });
-			
-			this._detailsSearchManager.startSearch();
-			
-			this._detailsTableView = new TableView({
+            
+            this._detailsSearchManager.startSearch();
+            
+            this._detailsTableView = new TableView({
                 id: 'item_details_'+rowData.values[rowColMapping["id"]]+'_'+Date.now(),
                 managerid: 'item_details',
                 'drilldown': 'none',
@@ -97,16 +161,16 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView){
             this._detailsSearchManager.on("search:start", function(state, job){
                 console.log("Detail Search starting...")
             });
-			
-			var section_header_item_details = '<hr><h3 class="section_header">Item Details</h3>';
-			var section_footer_item_details = '<hr>';
-			
-			$container.append(section_header_item_details);
+            
+            var section_header_item_details = '<hr><h3 class="section_header">Item Details</h3>';
+            var section_footer_item_details = '<hr>';
+            
+            $container.append(section_header_item_details);
             $container.append(this._detailsTableView.render().el);
-			$container.append(section_footer_item_details);
-		},
+            $container.append(section_footer_item_details);
+        },
         render: function($container, rowData) {
-			
+            
 
             //var showFields = ["id","status","input_date","type","action"]
             //var addedFields = ''
@@ -159,53 +223,10 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView){
             var item_input_date=($(this).parent().find("td.input_date")[0].innerHTML);
             //console.log("id", item_id)
             
-            var json = {};			
-            
             var rest_url = splunkUtil.make_url('/splunkd/__raw/services/freezer_inventory/items?action=get_item_info&id=' + item_id);
-            var item_data = $.get(rest_url, function(data, status) {
-				
-				//var add_modal = '        <div class="form form-horizontal form-complex" style="display: block;">';
-                //console.log(data);
-                //console.log(status);
-                $.each(data, function(key, value) { 
-				    json[key] = value;
-					//gen_modal = '          <div class="control-group shared-controls-controlgroup">' +
-					//			'            <label for="' + key + '" class="control-label">' + key + ':</label>' +
-					//			'            <div class="controls controls-block"><div class="control shared-controls-labelcontrol" id="' + key + '"><span class="input-label-' + key + '">' + value + '</span></div></div>' +
-					//			'          </div>'	
-                   //add_modal = add_modal + gen_modal;
-				});
-				
-				//add_modal = add_modal + '        </div>'
-				//console.log("add_modal:", add_modal);				
-				//$('.modal-body').append(add_modal);
-            }, "json");			
-			                    
-            console.log("json_data:", json);
-			
-			for(var key in json) {
-				var value = json[key];
-				console.log("key: ", key);console.log("value: ", value);
-			}
-            
-            var modal = ''+
-                        '<div class="modal fade" id="item_options">' +
-                        '  <div class="modal-dialog model-sm">' +
-                        '    <div class="modal-content">' +
-                        '      <div class="modal-header">' +
-                        '        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
-                        '        <h4 class="modal-title">Item Options</h4>' +
-                        '      </div>' +
-                        '      <div class="modal-body">' +
-                        '      </div>' +
-                        '      <div class="modal-footer">' +
-                        '        <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>' +
-                        '      </div>' +
-                        '    </div>' +
-                        '  </div>' +
-                        '</div>';
-        $('body').prepend(modal);
-        $('#item_options').modal('show');
+            $.getJSON(rest_url, function(data, status) {
+                showModalItemDetails(splunkUtil, data);
+            }, "json");
         }
     });
 });
