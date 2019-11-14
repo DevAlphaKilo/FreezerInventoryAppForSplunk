@@ -128,6 +128,19 @@ class ItemsEndpoint(PersistentServerConnectionApplication):
 
         return self.response(items, httplib.OK)
 
+    def _get_freezers(self, sessionKey, query_params):
+        logger.debug("START _get_items()")
+        splunk.setDefault('sessionKey', sessionKey)
+
+        freezers_uri = '/servicesNS/nobody/FreezerInventoryAppForSplunk/storage/collections/data/freezers?output_mode=json'
+
+        # Get item json
+        serverResponse, serverContent = rest.simpleRequest(freezers_uri, sessionKey=sessionKey, method='GET')
+        logger.debug("freezers: %s" % serverContent)
+        freezers = json.loads(serverContent)
+
+        return self.response(freezers, httplib.OK)
+
     def _get_item_info(self, sessionKey, query_params):
         logger.debug("START _get_item_info()")
         required = ['_key','id']
