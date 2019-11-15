@@ -164,7 +164,7 @@ function showItemTable (_, $, SearchManager, TableView) {
             
             this._detailsTableView = new TableView({
                 id: 'item_details_'+rowData.values[rowColMapping["id"]]+'_'+Date.now(),
-                managerid: 'item_details',
+                managerid: 'item_details' + time,
                 'drilldown': 'none',
                 'wrap': true,
                 'displayRowNumbers': false,
