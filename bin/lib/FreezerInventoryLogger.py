@@ -9,8 +9,8 @@ def setupLogger(logger='freezer_inventory'):
 	# logger
 	fileName = 'freezer_inventory.log'
 	if logger != 'freezer_inventory':
-		fileName = 'freezer_inventory%s.log' % logger
-		logger = 'freezer_inventory%s' % logger
+		fileName = 'freezer_inventory_%s.log' % logger
+		logger = 'freezer_inventory_%s' % logger
 
 	# Get loglevel from config file
 	local = os.path.join(util.get_apps_dir(), "FreezerInventoryAppForSplunk", "local", "freezer_inventory.conf")

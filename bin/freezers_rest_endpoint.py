@@ -125,7 +125,6 @@ class FreezersEndpoint(PersistentServerConnectionApplication):
         serverResponse, serverContent = rest.simpleRequest(freezers_uri, sessionKey=sessionKey, method='GET')
         logger.debug("freezers: %s" % serverContent)
         freezers = json.loads(serverContent)
-        logger.debug(("returning response: %s" % httplib.OK)
         return self.response(freezers, httplib.OK)
         
     #def _get_freezer_items(self, sessionKey, query_params):
@@ -178,7 +177,6 @@ class FreezersEndpoint(PersistentServerConnectionApplication):
         serverResponse, serverContent = rest.simpleRequest(items_uri, sessionKey=sessionKey, jsonargs=item_data, method='POST')
         logger.debug("items: %s" % serverContent)
         items = json.loads(serverContent)
-        logger.debug(("returning response: %s" % httplib.OK)
         return self.response(items, httplib.OK)
 
     def _delete_freezer(self, sessionKey, query_params):
@@ -204,6 +202,6 @@ class FreezersEndpoint(PersistentServerConnectionApplication):
 
         # Get item json
         serverResponse, serverContent = rest.simpleRequest(items_uri, sessionKey=sessionKey, method='DELETE')
-        logger.debug("item_info: %s" % serverContent)
-        logger.debug(("returning response: %s" % httplib.OK)
-        return self.response(httplib.OK)
+        logger.debug("items: %s" % serverContent)
+        items = json.loads(serverContent)
+        return self.response(items, httplib.OK)

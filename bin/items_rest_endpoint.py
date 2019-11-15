@@ -125,7 +125,6 @@ class ItemsEndpoint(PersistentServerConnectionApplication):
         serverResponse, serverContent = rest.simpleRequest(items_uri, sessionKey=sessionKey, method='GET')
         logger.debug("items: %s" % serverContent)
         items = json.loads(serverContent)
-        logger.debug(("returning response: %s" % httplib.OK)
         return self.response(items, httplib.OK)
 
     def _get_item_info(self, sessionKey, query_params):
@@ -151,10 +150,9 @@ class ItemsEndpoint(PersistentServerConnectionApplication):
 
         # Get item json
         serverResponse, serverContent = rest.simpleRequest(items_uri, sessionKey=sessionKey, method='GET')
-        logger.debug("item_info: %s" % serverContent)
-        item_info = json.loads(serverContent)
-        logger.debug(("returning response: %s" % httplib.OK)
-        return self.response(item_info, httplib.OK)
+        logger.debug("items: %s" % serverContent)
+        items = json.loads(serverContent)
+        return self.response(items, httplib.OK)
 
     def _add_item(self, sessionKey, user, post_data):
         logger.debug("START _add_item()")
@@ -178,7 +176,6 @@ class ItemsEndpoint(PersistentServerConnectionApplication):
         serverResponse, serverContent = rest.simpleRequest(items_uri, sessionKey=sessionKey, jsonargs=item_data, method='POST')
         logger.debug("items: %s" % serverContent)
         items = json.loads(serverContent)
-        logger.debug(("returning response: %s" % httplib.OK)
         return self.response(items, httplib.OK)
 
     def _delete_item(self, sessionKey, query_params):
@@ -201,9 +198,11 @@ class ItemsEndpoint(PersistentServerConnectionApplication):
                     item_id = item['_key']
 
         items_uri = '/servicesNS/nobody/FreezerInventoryAppForSplunk/storage/collections/data/items/%s' % item_id
+        logger.debug("items_uri: %s" % items_uri)
+        
+        items = {'_key': item_id, 'action': "removed"}
 
         # Get item json
         serverResponse, serverContent = rest.simpleRequest(items_uri, sessionKey=sessionKey, method='DELETE')
-        logger.debug("item_info: %s" % serverContent)
-        logger.debug(("returning response: %s" % httplib.OK)
-        return self.response(httplib.OK)
+        logger.debug("items: %s" % json.dumps(items))
+        return self.response(items, httplib.OK)
