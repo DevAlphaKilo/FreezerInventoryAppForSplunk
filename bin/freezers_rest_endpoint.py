@@ -199,9 +199,11 @@ class FreezersEndpoint(PersistentServerConnectionApplication):
                     item_id = item['_key']
 
         items_uri = '/servicesNS/nobody/FreezerInventoryAppForSplunk/storage/collections/data/freezers/%s' % item_id
+        logger.debug("items_uri: %s" % items_uri)
+        
+        items = {'_key': item_id, 'action': "removed"}
 
         # Get item json
         serverResponse, serverContent = rest.simpleRequest(items_uri, sessionKey=sessionKey, method='DELETE')
-        logger.debug("items: %s" % serverContent)
-        items = json.loads(serverContent)
+        logger.debug("items: %s" % json.dumps(items))
         return self.response(items, httplib.OK)
