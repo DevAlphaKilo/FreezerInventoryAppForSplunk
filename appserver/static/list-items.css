@@ -28,7 +28,9 @@ td.table_inline_icon {
 #myTable .type,
 #myTable [data\-sort\-key='type'],
 #myTable .action,
-#myTable [data\-sort\-key='action']  {
+#myTable [data\-sort\-key='action'],
+#myTable [data\-sort\-key='field'],
+#myTable [data\-sort\-key='value']   {
   display:none;
 }
 
