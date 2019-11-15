@@ -16,7 +16,7 @@ if not dir in sys.path:
     
 from FreezerInventoryLogger import *
    
-logger = setupLogger('endpoint-items')
+logger = setupLogger('endpoint-freezers')
 
 if sys.platform == "win32":
     import msvcrt
@@ -125,18 +125,18 @@ class FreezersEndpoint(PersistentServerConnectionApplication):
         serverResponse, serverContent = rest.simpleRequest(freezers_uri, sessionKey=sessionKey, method='GET')
         logger.debug("freezers: %s" % serverContent)
         freezers = json.loads(serverContent)
-
+        logger.debug(("returning response: %s" % httplib.OK)
         return self.response(freezers, httplib.OK)
-		
+        
     #def _get_freezer_items(self, sessionKey, query_params):
     #    logger.debug("START _get_item_info()")
     #    required = ['_key','id']
     #    missing = [r for r in required if r not in query_params]
     #    if len(missing) > 1:
     #        return self.response("Missing a required argument: %s" % missing, httplib.BAD_REQUEST)
-	#
+    #
     #    splunk.setDefault('sessionKey', sessionKey)
-	#
+    #
     #    if '_key' in query_params:
     #        item_id = query_params.pop('_key')
     #    else:
@@ -146,18 +146,18 @@ class FreezersEndpoint(PersistentServerConnectionApplication):
     #        for item in all_items['payload']:
     #            if item['id'] == item_id:
     #                item_id = item['_key']
-	#
+    #
     #    items_uri = '/servicesNS/nobody/FreezerInventoryAppForSplunk/storage/collections/data/freezers/%s' % item_id
-	#
+    #
     #    # Get item json
     #    serverResponse, serverContent = rest.simpleRequest(items_uri, sessionKey=sessionKey, method='GET')
     #    logger.debug("item_info: %s" % serverContent)
     #    item_info = json.loads(serverContent)
-	#
+    #
     #    return self.response(item_info, httplib.OK)
 
     def _add_freezer(self, sessionKey, user, post_data):
-        logger.debug("START _add_item()")
+        logger.debug("START _add_freezer()")
         logger.debug('post_data: %s', post_data)
         required = ['item_data']
         missing = [r for r in required if r not in post_data]
@@ -178,11 +178,11 @@ class FreezersEndpoint(PersistentServerConnectionApplication):
         serverResponse, serverContent = rest.simpleRequest(items_uri, sessionKey=sessionKey, jsonargs=item_data, method='POST')
         logger.debug("items: %s" % serverContent)
         items = json.loads(serverContent)
-
+        logger.debug(("returning response: %s" % httplib.OK)
         return self.response(items, httplib.OK)
 
     def _delete_freezer(self, sessionKey, query_params):
-        logger.debug("START _delete_item()")
+        logger.debug("START _delete_freezer()")
         required = ['_key','id']
         missing = [r for r in required if r not in query_params]
         if len(missing) > 1:
@@ -205,5 +205,5 @@ class FreezersEndpoint(PersistentServerConnectionApplication):
         # Get item json
         serverResponse, serverContent = rest.simpleRequest(items_uri, sessionKey=sessionKey, method='DELETE')
         logger.debug("item_info: %s" % serverContent)
-
+        logger.debug(("returning response: %s" % httplib.OK)
         return self.response(httplib.OK)
