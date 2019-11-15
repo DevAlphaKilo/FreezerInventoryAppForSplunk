@@ -1,95 +1,97 @@
 
-function showModalItemDetails (splunkUtil, item) {
-	
-	//$.each(data, function(key, value) { 
-	//    item[key] = value;
-	//    //gen_modal = '          <div class="control-group shared-controls-controlgroup">' +
-	//    //            '            <label for="' + key + '" class="control-label">' + key + ':</label>' +
-	//    //            '            <div class="controls controls-block"><div class="control shared-controls-labelcontrol" id="' + key + '"><span class="input-label-' + key + '">' + value + '</span></div></div>' +
-	//    //            '          </div>'    
-	//   //add_modal = add_modal + gen_modal;
-	//});
-	
-	var section_header_item_details = '<div>' +
-	                                  '  <h5 class="item-details-header">Item Details</h5>';
-	var section_body_item_details   = '  <div class="item-details-row"><div class="item-details-label">ID:</div><div class="item-details-value">' + item["id"] + '</div></div>' +
-	                                  '  <div class="item-details-row"><div class="item-details-label">Type:</div><div class="item-details-value">' + item["type"] + '</div></div>' +
-	                                  '  <div class="item-details-row"><div class="item-details-label">Subtype:</div><div class="item-details-value">' + item["subtype"] + '</div></div>' +
-	                                  '  <div class="item-details-row"><div class="item-details-label">Sub_Subtype:</div><div class="item-details-value">' + item["sub_subtype"] + '</div></div>';
-	var section_footer_item_details = '</div>';
-	var section_item_details = section_header_item_details + section_body_item_details + section_footer_item_details;
-	
-	var section_header_location = '<div>' +
-	                              '  <h5 class="location-header">Update Item</h5>';
-	var section_body_location   = '    <div class="control-group shared-controls-controlgroup">' +
-								  '      <label for="location" class="control-label">Storage Location:</label>' +
-								  '        <div class="controls"><select name="status" id="location" disabled="disabled"></select></div>' +
-								  '    </div>';
-	var section_footer_location = '</div>';
-	var section_location = section_header_location + section_body_location + section_footer_location;
-	
-	var delete_item_uri = splunkUtil.make_url('/splunkd/__raw/services/freezer_inventory/items?action=delete_item&id=' + item["id"]);
-	
-	var section_header_delete = '<div>' +
-	                              '  <h5 class="delete-header">Delete Item</h5>';
-	var section_body_delete   = '  <div class="delete-row"><div class="delete-label"></div><div class="delete-value">' +
-                                '<a href="' + delete_item_uri + '">DELETE THIS ITEM</a>' +
-								'</div></div>';
-	var section_footer_delete = '</div>';
-	var section_delete = section_header_delete + section_body_delete + section_footer_delete;
-
-	var modal = ''+
-				'<div class="modal fade" id="item_options">' +
-				'  <div class="modal-dialog model-sm">' +
-				'    <div class="modal-content">' +
-				'      <div class="modal-header">' +
-				'        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
-				'        <h4 class="modal-title">Item Options</h4>' +
-				'      </div>' +
-				'      <div class="modal-body">' +
-						 section_item_details + 
-				'        <hr>' +
-						 section_location + 
-				'        <hr>' +
-						 section_delete + 
-				'      </div>' +
-				'      <div class="modal-footer">' +
-                '        <button type="button" class="btn cancel modal-btn-cancel pull-left" data-dismiss="modal">Cancel</button>' +
-				'        <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>' +
-				'      </div>' +
-				'    </div>' +
-				'  </div>' +
-				'</div>';
-	$('body').prepend(modal);
-	$('#item_options').modal('show');
-	
-	var rest_url = splunkUtil.make_url('/splunkd/__raw/services/freezer_inventory/items?action=get_freezers');
-	$.getJSON(rest_url, function(data, status) {
-		// each freezer in collection
-		$("#location").select2();
-		$.each(data, function(index, freezer) {
-			if (freezer["active"]) { $('#location').append( $('<option></option>').val(freezer["name"]).html(freezer["name"]) ); }
-		});		
-	}, "json");
-	$("#location").prop("disabled", false);	
+function deleteItem (splunkUtil, id) {
+	console.log("id", id);
+	var item_delete_uri = splunkUtil.make_url('/splunkd/__raw/services/freezer_inventory/items?action=delete_item&id=' + id);
+	console.log("item_delete_uri", item_delete_uri);
+	$.get(item_delete_uri, function(data, status) {
+		console.log(data);
+		console.log(status);
+	});
+	return true;
 }
 
-require([
-     'underscore',
-     'jquery',
-     'splunk.util',
-     'splunkjs/mvc',
-     'splunkjs/mvc/searchmanager',
-     'splunkjs/mvc/tableview',
-     'splunkjs/mvc/simplexml/ready!'
-],
-function(_, $, splunkUtil, mvc, SearchManager, TableView){
-        
-    // Translations from rangemap results to CSS class
+function showModalItemDetails (splunkUtil, mvc, item) {
+
+    var section_header_item_details = '<div>' +
+                                      '  <h5 class="item-details-header">Item Details</h5>';
+    var section_body_item_details   = '  <div class="item-details-row"><div class="item-details-label">ID:</div><div class="item-details-value">' + item["id"] + '</div></div>' +
+                                      '  <div class="item-details-row"><div class="item-details-label">Type:</div><div class="item-details-value">' + item["type"] + '</div></div>' +
+                                      '  <div class="item-details-row"><div class="item-details-label">Subtype:</div><div class="item-details-value">' + item["subtype"] + '</div></div>' +
+                                      '  <div class="item-details-row"><div class="item-details-label">Sub_Subtype:</div><div class="item-details-value">' + item["sub_subtype"] + '</div></div>';
+    var section_footer_item_details = '</div>';
+    var section_item_details = section_header_item_details + section_body_item_details + section_footer_item_details;
+
+    var section_header_location = '<div>' +
+                                  '  <h5 class="location-header">Update Item</h5>';
+    var section_body_location   = '    <div class="control-group shared-controls-controlgroup">' +
+                                  '      <label for="location" class="control-label">Storage Location:</label>' +
+                                  '        <div class="controls"><select name="status" id="location" disabled="disabled"></select></div>' +
+                                  '    </div>';
+    var section_footer_location = '</div>';
+    var section_location = section_header_location + section_body_location + section_footer_location;
+
+    var section_header_delete = '<div>' +
+                                  '  <h5 class="delete-header">Delete Item</h5>';
+    var section_body_delete   = '  <div class="delete-row"><div class="delete-label"></div><div class="delete-value">' +
+                                '<a class="delete-row-link" data-dismiss="modal" href="#">DELETE THIS ITEM</a>' +
+                                '</div></div>';
+    var section_footer_delete = '</div>';
+    var section_delete = section_header_delete + section_body_delete + section_footer_delete;
+
+    var modal = ''+
+                '<div class="modal fade" id="item_options">' +
+                '  <div class="modal-dialog model-sm">' +
+                '    <div class="modal-content">' +
+                '      <div class="modal-header">' +
+                '        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
+                '        <h4 class="modal-title">Item Options</h4>' +
+                '      </div>' +
+                '      <div class="modal-body">' +
+                         section_item_details + 
+                '        <hr>' +
+                         section_location + 
+                '        <hr>' +
+                         section_delete + 
+                '      </div>' +
+                '      <div class="modal-footer">' +
+                '        <button type="button" class="btn cancel modal-btn-cancel pull-left" data-dismiss="modal">Cancel</button>' +
+                '        <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>' +
+                '      </div>' +
+                '    </div>' +
+                '  </div>' +
+                '</div>';
+    $('body').prepend(modal);
+    $('#item_options').modal('show');
+	
+	$(".delete-row-link").on("click", function(e) {
+		console.log("event handler fired (click-delete-row-link)");
+		//e.stopPropagation();
+		var id = $('.modal-body').children().find("div.item-details-value").html()
+		$(".delete-row-link").trigger("deleteclick", {"id": id});
+	});
+    
+    var rest_url = splunkUtil.make_url('/splunkd/__raw/services/freezer_inventory/freezers?action=get_freezers');
+    $.getJSON(rest_url, function(data, status) {
+        // each freezer in collection
+        $("#location").select2();
+        $.each(data, function(index, freezer) {
+            if (freezer["active"]) { $('#location').append( $('<option></option>').val(freezer["name"]).html(freezer["name"]) ); }
+        });
+    }, "json");
+    $("#location").prop("disabled", false);    
+}
+
+function showItemTable (_, $, SearchManager, TableView) {
+	// Translations from rangemap results to CSS class
     var ICONS = {
         edit: 'settings',
         delete: 'x'
     };
+	
+	$("#myTable").append("<div id=\"myTable_container\"></div>");
+	
+	
+	var time = Date.now();
     
     var CustomCellRenderer = TableView.BaseCellRenderer.extend({
         canRender: function(cell) {
@@ -108,7 +110,7 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView){
             }
             
             $td.on("click", function(e) {
-                console.log("event handler fired");
+                console.log("event handler fired (click-td)");
                 e.stopPropagation();
                 $td.trigger("iconclick", {"field": cell.field });
             });
@@ -131,7 +133,7 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView){
             // initialize will run once, so we will set up a search and a chart to be reused.
 
             this._detailsSearchManager = new SearchManager({
-                id: 'item_details',
+                id: 'item_details' + time,
                 preview: false
             });
 
@@ -198,7 +200,7 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView){
 
     // Set up search managers
     var search_items = new SearchManager({
-        id: "freezer_items",
+        id: "freezer_items" + time,
         search: "| `freezer_items` | eval input_date=strftime(input_date, \"%m/%d/%Y %H:%M:%S\"), sealed_date=strftime(sealed_date, \"%m/%d/%Y %H:%M:%S\"), purchase_date=strftime(purchase_date, \"%m/%d/%Y %H:%M:%S\") | table edit, id, status, input_date, type, subtype, sub_subtype, purchase_date, sealed_date, pack_contains, action",
         earliest_time: "-15m",
         latest_time: "now",
@@ -210,14 +212,14 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView){
     // Create a table
     var myTableObj = new TableView({
         id: "myTable_rendered",
-        managerid: "freezer_items",
+        managerid: "freezer_items" + time,
         drilldown: "none",
         pageSize: "10",
         showPager: true,
         "link.exportResults.visible": true,
         "link.openSearch.visible": false,
         "link.visible": true,
-        el: $("#myTable")
+        el: $("#myTable_container")
     });
     
     myTableObj.addCellRenderer(new CustomCellRenderer());
@@ -225,6 +227,20 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView){
     myTableObj.addRowExpansionRenderer(new CustomRowRenderer());
     console.log(myTableObj);
     myTableObj.render();
+}
+
+require([
+     'underscore',
+     'jquery',
+     'splunk.util',
+     'splunkjs/mvc',
+     'splunkjs/mvc/searchmanager',
+     'splunkjs/mvc/tableview',
+     'splunkjs/mvc/simplexml/ready!'
+],
+function(_, $, splunkUtil, mvc, SearchManager, TableView){
+        
+    showItemTable(_, $, SearchManager, TableView);
     
     $(document).on("iconclick", "td", function(e, data) {
         //console.log("e", e);
@@ -237,8 +253,22 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView){
             
             var rest_url = splunkUtil.make_url('/splunkd/__raw/services/freezer_inventory/items?action=get_item_info&id=' + item_id);
             $.getJSON(rest_url, function(data, status) {
-                showModalItemDetails(splunkUtil, data);
+                showModalItemDetails(splunkUtil, mvc, data);
+				//update_item_table = true;
             }, "json");
         }
+    });
+	
+	$(document).on("deleteclick", ".delete-row-link", function(e, data) {
+        console.log("e", e);
+		var id = $.trim(data["id"]);
+        console.log("deleteing item - id: ", id);
+		deleteItem(splunkUtil, id);
+		
+		var update_item_table = true;
+		if (update_item_table) {
+			mvc.Components.get("myTable_rendered").remove();
+			showItemTable(_, $, SearchManager, TableView);
+		}
     });
 });
