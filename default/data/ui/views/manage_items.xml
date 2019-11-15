@@ -1,5 +1,5 @@
 <dashboard script="list-items.js" stylesheet="list-items.css">
-  <label>Items List</label> 
+  <label>Manage List</label> 
   <row>
     <panel>
       <html>
