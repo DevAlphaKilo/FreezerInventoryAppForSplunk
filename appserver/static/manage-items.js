@@ -3,11 +3,13 @@ function deleteItem (splunkUtil, id) {
 	console.log("id", id);
 	var item_delete_uri = splunkUtil.make_url('/splunkd/__raw/services/freezer_inventory/items?action=delete_item&id=' + id);
 	console.log("item_delete_uri", item_delete_uri);
-	$.get(item_delete_uri, function(data, status) {
-		console.log(data);
-		console.log(status);
-	});
-	return true;
+	var confirm_delete = window.confirm("Are you sure you wantt to delete this item?");
+	if (confirm_delete) {
+		$.get(item_delete_uri, function(data, status) {
+			console.log(data);
+			console.log(status);
+		});
+	}
 }
 
 function showModalItemDetails (splunkUtil, mvc, item) {
