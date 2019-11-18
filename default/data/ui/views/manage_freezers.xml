@@ -1,10 +1,52 @@
 <dashboard script="manage-freezers.js" stylesheet="manage-freezers.css" onunloadCancelJobs="true" hideFilters="true">
-  <label>Manage Freezer(s)</label> 
+  <label>Manage Freezer(s)</label>
+  <row>
+    <panel>
+      <single>
+        <title>Total Freezers</title>
+        <search>
+          <query>| `freezers`
+| stats dc(id)</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>Active Freezers</title>
+        <search>
+          <query>| `freezers`
+| search active=1
+| stats dc(id)</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>Active Freezers</title>
+        <search>
+          <query>| `freezers`
+| search active=0
+| stats dc(id)</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+  </row>
   <row>
     <panel>
       <html>
-        <div id="myTable"></div>
+        <div id="myTable"/>
       </html>
     </panel>
- </row>
+  </row>
 </dashboard>
