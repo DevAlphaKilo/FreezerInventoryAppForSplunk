@@ -1,5 +1,48 @@
-require(["jquery","splunkjs/mvc",'splunk.util',"splunkjs/mvc/simplexml/ready!"],
-function($, mvc, splunkUtil){
+
+function showItemTable (_, $, SearchManager, TableView) {
+	
+	$("#recentlyAddedItems").append("<div id=\"recentlyAddedItems_label\"><h2>Recently Added Items</h2></div><div id=\"recentlyAddedItems_container\"></div>");
+	
+	var time = Date.now();
+
+    // Set up search managers
+    var search_items = new SearchManager({
+        id: "freezer_items" + time,
+        search: "| `freezer_items` | search status=\"available\" | eval today=strftime(now(), \"%d-%m-%Y\"), input_day=strftime(input_date, \"%d-%m-%Y\"), input_is_today=case(today==input_day,1,true(),0) | search input_is_today=1 | eval input_date=strftime(input_date, \"%m/%d/%Y %H:%M:%S\"), sealed_date=strftime(sealed_date, \"%m/%d/%Y %H:%M:%S\"), purchase_date=strftime(purchase_date, \"%m/%d/%Y %H:%M:%S\") | table type, subtype, sub_subtype, pack_contains, input_date, purchase_date, sealed_date",
+        earliest_time: "-15m",
+        latest_time: "now",
+        preview: true,
+        cache: true,
+        cancelOnUnload: true
+    }, {tokens: true});
+    
+    // Create a table
+    var myTableObj = new TableView({
+        id: "myTable_rendered",
+        managerid: "freezer_items" + time,
+        drilldown: "none",
+        pageSize: "10",
+        showPager: true,
+        "link.exportResults.visible": true,
+        "link.openSearch.visible": false,
+        "link.visible": true,
+        el: $("#recentlyAddedItems_container")
+    });
+
+    console.log(myTableObj);
+    myTableObj.render();
+}
+
+require([
+     'underscore',
+     'jquery',
+     'splunk.util',
+     'splunkjs/mvc',
+     'splunkjs/mvc/searchmanager',
+     'splunkjs/mvc/tableview',
+     'splunkjs/mvc/simplexml/ready!'
+],
+function(_, $, splunkUtil, mvc, SearchManager, TableView){
 	function setToken(name, value) {
 		defaultTokenModel.set(name, value);
 		submittedTokenModel.set(name, value);
@@ -26,6 +69,9 @@ function($, mvc, splunkUtil){
     var submittedTokenModel = mvc.Components.getInstance('submitted', {create: true});
 	
 	setToken("show_instructions", true);
+	setToken("show_recent", true);
+	
+	showItemTable(_, $, SearchManager, TableView);
 	
     // clear forms when updated
     $("div[class='input input-dropdown'").each(function( index ) {
