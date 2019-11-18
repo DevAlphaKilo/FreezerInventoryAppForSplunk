@@ -8,13 +8,33 @@
         <latest>now</latest>
       </default>
     </input>
+    <input type="multiselect" token="freezers" searchWhenChanged="true">
+      <label>Freezers</label>
+      <fieldForLabel>name</fieldForLabel>
+      <fieldForValue>id</fieldForValue>
+      <search>
+        <query>| `freezers`
+| search active=1</query>
+        <earliest>-15m</earliest>
+        <latest>now</latest>
+      </search>
+      <delimiter>  OR </delimiter>
+      <choice value="*">All Freezers</choice>
+      <default>*</default>
+      <initialValue>*</initialValue>
+      <prefix>(</prefix>
+      <suffix>)</suffix>
+      <valuePrefix>freezer="</valuePrefix>
+      <valueSuffix>"</valueSuffix>
+    </input>
   </fieldset>
   <row>
     <panel>
       <single>
         <title>Total Items</title>
         <search>
-          <query>| `freezer_items` 
+          <query>| `freezer_items`
+| search status="available" $freezers$
 | stats dc(id)</query>
           <earliest>$timespan.earliest$</earliest>
           <latest>$timespan.latest$</latest>
@@ -28,7 +48,7 @@
         <title>Total Meat Items</title>
         <search>
           <query>| `freezer_items` 
-| search type="meat"
+| search type="meat" status="available" $freezers$
 | stats dc(id)</query>
           <earliest>$timespan.earliest$</earliest>
           <latest>$timespan.latest$</latest>
@@ -42,7 +62,7 @@
         <title>Total Vegetable Items</title>
         <search>
           <query>| `freezer_items` 
-| search type="vegetable"
+| search type="vegetable" status="available" $freezers$
 | stats dc(id)</query>
           <earliest>$timespan.earliest$</earliest>
           <latest>$timespan.latest$</latest>
@@ -56,7 +76,7 @@
         <title>Total Snack Items</title>
         <search>
           <query>| `freezer_items` 
-| search type="snack"
+| search type="snack" status="available" $freezers$
 | stats dc(id)</query>
           <earliest>$timespan.earliest$</earliest>
           <latest>$timespan.latest$</latest>
@@ -72,6 +92,7 @@
         <title>Item Types</title>
         <search>
           <query>| `freezer_items` 
+| search status="available" $freezers$
 | stats count by type</query>
           <earliest>$timespan.earliest$</earliest>
           <latest>$timespan.latest$</latest>
@@ -87,6 +108,7 @@
         <title>Item Subtypes</title>
         <search>
           <query>| `freezer_items` 
+| search status="available" $freezers$
 | stats count by subtype</query>
           <earliest>$timespan.earliest$</earliest>
           <latest>$timespan.latest$</latest>
@@ -104,6 +126,7 @@
         <title>Item additions</title>
         <search>
           <query>| `freezer_items`
+| search status="available" $freezers$
 | eval "_time"=input_date
 | timechart span=1d usenull=false count by type</query>
           <earliest>$timespan.earliest$</earliest>
