@@ -48,7 +48,7 @@ function($, mvc, splunkUtil){
 			//console.log(data);
 			//console.log(status);
 			// post each generated event
-			var default_freezer_id = data["_key"]
+			var default_freezer_id = data["id"]
 			$.each(tableResults, function( result_index ) {
 				// each result item 
 				this["freezer"] = default_freezer_id;
