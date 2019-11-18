@@ -1,5 +1,5 @@
 <dashboard script="manage-items.js" stylesheet="manage-items.css" onunloadCancelJobs="true" hideFilters="true">
-  <label>Manage Item(s)</label> 
+  <label>Manage Items</label> 
   <fieldset submitButton="false">
     <input type="multiselect" token="freezers" searchWhenChanged="true">
       <label>Freezers</label>
