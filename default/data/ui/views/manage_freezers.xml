@@ -1,0 +1,10 @@
+<dashboard script="manage-freezers.js" stylesheet="manage-freezers.css" onunloadCancelJobs="true" hideFilters="true">
+  <label>Manage Freezer(s)</label> 
+  <row>
+    <panel>
+      <html>
+        <div id="myTable"></div>
+      </html>
+    </panel>
+ </row>
+</dashboard>

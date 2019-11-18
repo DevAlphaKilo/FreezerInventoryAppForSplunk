@@ -1,5 +1,5 @@
-<dashboard script="list-items.js" stylesheet="list-items.css">
-  <label>Manage List</label> 
+<dashboard script="manage-items.js" stylesheet="manage-items.css" onunloadCancelJobs="true" hideFilters="true">
+  <label>Manage Item(s)</label> 
   <row>
     <panel>
       <html>
