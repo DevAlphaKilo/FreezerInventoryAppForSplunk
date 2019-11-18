@@ -40,25 +40,36 @@ function($, mvc, splunkUtil){
             tableResults[row_index] = rowResults;
           }  
         });
-        // post each generated event
-        $.each(tableResults,function( result_index ) {
-            // each result item 
-            this["action"] = "added"
-            this["status"] = "available"
-            delete this['pack_id'];
-            data = JSON.stringify(this);
-            console.log(data);
+		
+		var default_freezer_url = splunkUtil.make_url('/splunkd/__raw/services/freezer_inventory/freezers?action=get_default_freezer');
+		var default_freezer_id = ''		
+		
+		$.get(default_freezer_url, function(data, status) {
+			//console.log(data);
+			//console.log(status);
+			// post each generated event
+			var default_freezer_id = data["_key"]
+			$.each(tableResults, function( result_index ) {
+				// each result item 
+				this["freezer"] = default_freezer_id;
+				this["status"] = "available";
+				delete this['pack_id'];
+				data = JSON.stringify(this);
+				console.log(data);
 
-            var rest_url = splunkUtil.make_url('/splunkd/__raw/services/freezer_inventory/items');
-            var post_data = {
-                action            : 'add_item',
-                item_data : data,
-            };
-            $.post( rest_url, post_data, function(data, status) {
-                console.log(data);
-                console.log(status);
-            }, "json");
-        });
+				var rest_url = splunkUtil.make_url('/splunkd/__raw/services/freezer_inventory/items');
+				var post_data = {
+					action    : 'add_item',
+					item_data : data,
+				};
+				$.post( rest_url, post_data, function(data, status) {
+					console.log(data);
+					console.log(status);
+				}, "json");
+			});
+		}, "json");
+		
+        
         var modal = ''+
 '<div class="modal fade" id="post_success">' +
 '  <div class="modal-dialog model-sm">' +
