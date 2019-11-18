@@ -75,7 +75,14 @@ function showModalItemDetails (splunkUtil, mvc, item) {
         // each freezer in collection
         $("#location").select2();
         $.each(data, function(index, freezer) {
-            if (freezer["active"]) { $('#location').append( $('<option></option>').val(freezer["name"]).html(freezer["name"]) ); }
+            if (freezer["active"]) {
+				if (freezer["default"]) { 
+					$('#location').append( $('<option></option>').attr("selected", "selected").val(freezer["name"]).html(freezer["name"]) );
+					$('#location').select2('data', {id: freezer["name"], text: freezer["name"]});
+				}
+				else 
+				{ $('#location').append( $('<option></option>').val(freezer["name"]).html(freezer["name"]) ); }
+			}
         });
     }, "json");
     $("#location").prop("disabled", false);    
