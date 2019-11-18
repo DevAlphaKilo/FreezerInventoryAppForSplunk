@@ -1,26 +1,51 @@
-function resetForm(mvc) {
-    // reset dropdowns after posting events
-    $("div[class='input input-dropdown'").each(function( index ) {
-        //console.log(this.id);
-        mvc.Components.get(this.id).val(undefined);
-    });
-    // hide the temp item table after clearing input
-    mvc.Components.getInstance('submitted').unset("input_complete");
-    mvc.Components.getInstance('default').unset("input_complete");
-}
-
 require(["jquery","splunkjs/mvc",'splunk.util',"splunkjs/mvc/simplexml/ready!"],
 function($, mvc, splunkUtil){
+	function setToken(name, value) {
+		defaultTokenModel.set(name, value);
+		submittedTokenModel.set(name, value);
+	}
+
+	function unsetToken(name) {
+		defaultTokenModel.unset(name);
+		submittedTokenModel.unset(name);
+	}
+	
+	function resetForm() {
+		// reset dropdowns after posting events
+		$("div[class='input input-dropdown'").each(function( index ) {
+			//console.log(this.id);
+			mvc.Components.get(this.id).val(undefined);
+		});
+		// hide the temp item table after clearing input
+		mvc.Components.getInstance('submitted').unset("input_complete");
+		mvc.Components.getInstance('default').unset("input_complete");
+		setToken("show_instructions", true);
+	}
+	
+	var defaultTokenModel = mvc.Components.getInstance('default', {create: true});
+    var submittedTokenModel = mvc.Components.getInstance('submitted', {create: true});
+	
+	setToken("show_instructions", true);
+	
     // clear forms when updated
     $("div[class='input input-dropdown'").each(function( index ) {
         //console.log(this.id);
         var name = this.id;
         window[name] = mvc.Components.get(this.id);
     });
-    item_type.on('change', function() { item_subtype.val(undefined); });
-    item_subtype.on('change', function() { item_sub_subtype.val(undefined); });
+    item_type.on('change', function() { 
+		item_subtype.val(undefined);
+		unsetToken("show_instructions");		
+	});
+    item_subtype.on('change', function() {
+		item_sub_subtype.val(undefined);
+		unsetToken("show_instructions");
+	});
     // submit button 'click' event
     $("#submit_button").on("click", function (){
+		
+		setToken("show_instructions", true);
+		
         var tableHeaders = {};
         var tableResults = {};
         $("#new_items").find("tr").each(function( row_index ) {
