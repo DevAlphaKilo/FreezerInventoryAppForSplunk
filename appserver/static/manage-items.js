@@ -23,17 +23,20 @@ function showModalItemDetails (splunkUtil, mvc, item) {
     var section_footer_item_details = '</div>';
     var section_item_details = section_header_item_details + section_body_item_details + section_footer_item_details;
 
-    var section_header_location = '<div>' +
-                                  '  <h5 class="location-header">Update Item</h5>';
-    var section_body_location   = '    <div class="control-group shared-controls-controlgroup">' +
-                                  '      <label for="location" class="control-label">Storage Location:</label>' +
-                                  '        <div class="controls"><select name="status" id="location" disabled="disabled"></select></div>' +
-                                  '    </div>';
-    var section_footer_location = '</div>';
-    var section_location = section_header_location + section_body_location + section_footer_location;
+    var section_header_update = '<div>' +
+                                '  <h5 class="location-header">Update Item</h5>';
+    var section_body_update   = '    <div class="control-group shared-controls-controlgroup">' +
+                                '      <label for="status" class="control-label">Item Status:</label>' +
+                                '        <div class="controls"><select name="status" id="status" disabled="disabled"></select></div>' +
+								'        <br>' +
+								'      <label for="location" class="control-label">Storage Location:</label>' +
+                                '        <div class="controls"><select name="location" id="location" disabled="disabled"></select></div>' +
+                                '    </div>';
+    var section_footer_update = '</div>';
+    var section_update = section_header_update + section_body_update + section_footer_update;
 
     var section_header_delete = '<div>' +
-                                  '  <h5 class="delete-header">Delete Item</h5>';
+                                '  <h5 class="delete-header">Delete Item</h5>';
     var section_body_delete   = '  <div class="delete-row"><div class="delete-label"></div><div class="delete-value">' +
                                 '<a class="delete-row-link" data-dismiss="modal" href="#">DELETE THIS ITEM</a>' +
                                 '</div></div>';
@@ -51,7 +54,7 @@ function showModalItemDetails (splunkUtil, mvc, item) {
                 '      <div class="modal-body">' +
                          section_item_details + 
                 '        <hr>' +
-                         section_location + 
+                         section_update + 
                 '        <hr>' +
                          section_delete + 
                 '      </div>' +
@@ -71,6 +74,23 @@ function showModalItemDetails (splunkUtil, mvc, item) {
 		var id = $('.modal-body').children().find("div.item-details-value").html()
 		$(".delete-row-link").trigger("deleteclick", {"id": id});
 	});
+	
+	$("#location").select2();
+	$("#status").select2();
+	
+	var selectOptionsStatus = ['available','on-hold'];
+	$.each(selectOptionsStatus, function(index, option) {
+		if (index == 0)
+		{ 
+			$('#status').append( $('<option></option>').attr("selected", "selected").val(option).html(option) );
+			$('#status').select2('data', {id: option, text: option});
+		}
+		else 
+		{ 
+			$('#status').append( $('<option></option>').val(option).html(option) );
+		}
+	});
+	 $("#status").prop("disabled", false);  
     
     var rest_url = splunkUtil.make_url('/splunkd/__raw/services/freezer_inventory/freezers?action=get_freezers');
     $.getJSON(rest_url, function(data, status) {
