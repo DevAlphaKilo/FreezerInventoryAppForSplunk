@@ -117,6 +117,7 @@ class ItemsEndpoint(PersistentServerConnectionApplication):
 
     def _get_items(self, sessionKey, query_params):
         logger.debug("START _get_items()")
+        logger.debug("query_params: %s" % query_params)
         splunk.setDefault('sessionKey', sessionKey)
 
         items_uri = '/servicesNS/nobody/FreezerInventoryAppForSplunk/storage/collections/data/items?output_mode=json'
@@ -129,6 +130,7 @@ class ItemsEndpoint(PersistentServerConnectionApplication):
 
     def _get_item_info(self, sessionKey, query_params):
         logger.debug("START _get_item_info()")
+        logger.debug("query_params: %s" % query_params)
         required = ['_key','id']
         missing = [r for r in required if r not in query_params]
         if len(missing) > 1:
@@ -145,6 +147,8 @@ class ItemsEndpoint(PersistentServerConnectionApplication):
             for item in all_items['payload']:
                 if item['id'] == item_id:
                     item_id = item['_key']
+
+        logger.debug("item_id: %s" % item_id)
 
         items_uri = '/servicesNS/nobody/FreezerInventoryAppForSplunk/storage/collections/data/items/%s' % item_id
 
@@ -174,6 +178,62 @@ class ItemsEndpoint(PersistentServerConnectionApplication):
 
         # Get incident json
         serverResponse, serverContent = rest.simpleRequest(items_uri, sessionKey=sessionKey, jsonargs=item_data, method='POST')
+        logger.debug("items: %s" % serverContent)
+        items = json.loads(serverContent)
+        return self.response(items, httplib.OK)
+        
+    def _update_item(self, sessionKey, user, post_data):
+        logger.debug("START _update_item()")
+        logger.debug('post_data: %s', post_data)
+        required = ['item_data']
+        missing = [r for r in required if r not in post_data]
+        if missing:
+            return self.response("Missing required arguments: %s" % missing, httplib.BAD_REQUEST)
+
+        item_data = post_data.pop('item_data')
+        item_data = json.loads(item_data)
+        logger.debug("item_data: %s" % item_data)
+
+        splunk.setDefault('sessionKey', sessionKey)
+
+        required = ['_key', 'id']
+        missing = [r for r in required if r not in item_data]
+        if len(missing) > 1:
+            return self.response("Missing required arguments: %s" % missing, httplib.BAD_REQUEST)
+
+        items_uri = '/servicesNS/nobody/FreezerInventoryAppForSplunk/storage/collections/data/items?output_mode=json'
+
+        # Get item json
+        serverResponse, serverContent = rest.simpleRequest(items_uri, sessionKey=sessionKey, method='GET')
+        logger.debug("items: %s" % serverContent)
+        all_items = json.loads(serverContent)
+
+        provided_keys = item_data
+
+        for item in all_items:
+            if '_key' in item_data:
+                if item["_key"] == item_data["_key"]:
+                    updated_item = item
+                    del provided_keys["_key"]
+            elif 'id' in item_data:
+                if item["id"] == item_data["id"]:
+                    updated_item = item
+                    del provided_keys["id"] 
+
+        logger.debug("updated_item: %s" % updated_item)
+        
+        for key in provided_keys:
+            updated_item[key] = provided_keys[key]
+            
+        item_id = updated_item["_key"]
+        
+        updated_item = json.dumps(updated_item)
+        logger.debug("updated_item: %s" % updated_item)
+
+        items_uri = '/servicesNS/nobody/FreezerInventoryAppForSplunk/storage/collections/data/items/%s' % item_id
+
+        # Get incident json
+        serverResponse, serverContent = rest.simpleRequest(items_uri, sessionKey=sessionKey, jsonargs=updated_item, method='POST')
         logger.debug("items: %s" % serverContent)
         items = json.loads(serverContent)
         return self.response(items, httplib.OK)
