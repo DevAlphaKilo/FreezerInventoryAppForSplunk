@@ -85,3 +85,41 @@ td.table_inline_icon {
 	display: block;
 	text-align: center;
 }
+
+.section-header {
+	display: block;
+	width: 390px;
+}
+
+div [id^='item_details_'] {
+	float: left;
+	display: block;
+	width: 400px;
+}
+
+#header-freezer {
+	position: relative;
+	top: -30px;
+	left: 60px;
+}
+
+div [id^='freezer_details_'] {
+	display: block;
+	position: relative;
+	top: -30px;
+	width: 250px;
+	height: fit-content;
+	padding-left: 50px;
+	padding-bottom: 85px;
+}
+
+div.shared-resultstable-resultstablemaster.results-table {
+	overflow: hidden;
+}
+
+hr {
+	padding: 0px;
+	margin-top: 0px;
+	margin-bottom: 10px;
+}
+

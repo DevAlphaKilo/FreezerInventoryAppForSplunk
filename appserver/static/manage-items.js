@@ -170,6 +170,11 @@ function showItemTable (_, $, SearchManager, TableView) {
                 id: 'item_details' + time,
                 preview: false
             });
+			
+			this._freezerSearchManager = new SearchManager({
+                id: 'item_freezer' + time,
+                preview: false
+            });
 
         },
         canRender: function(rowData) {
@@ -184,10 +189,10 @@ function showItemTable (_, $, SearchManager, TableView) {
                 rowColMapping[cell.field] = index;
             });
             
-            var search_string = "| `freezer_items` | search id=\"" + rowData.values[rowColMapping["id"]] + "\" | eval input_date=strftime(input_date, \"%m/%d/%Y %H:%M:%S\"), sealed_date=strftime(sealed_date, \"%m/%d/%Y %H:%M:%S\"), purchase_date=strftime(purchase_date, \"%m/%d/%Y %H:%M:%S\") | table edit, id, status, input_date, type, subtype, sub_subtype, purchase_date, sealed_date, pack_contains | transpose | rename column AS \"field\", \"row 1\" AS \"value\"";
+            var details_search_string = "| `freezer_items` | search id=\"" + rowData.values[rowColMapping["id"]] + "\" | eval input_date=strftime(input_date, \"%m/%d/%Y %H:%M:%S\"), sealed_date=strftime(sealed_date, \"%m/%d/%Y %H:%M:%S\"), purchase_date=strftime(purchase_date, \"%m/%d/%Y %H:%M:%S\") | table id, status, input_date, type, subtype, sub_subtype, purchase_date, sealed_date, pack_contains | transpose | rename column AS \"field\", \"row 1\" AS \"value\"";
             
             this._detailsSearchManager.set({
-                search: search_string,
+                search: details_search_string,
                 earliest_time: "-15m",
                 latest_time: "now",
                 autostart: false,
@@ -210,12 +215,54 @@ function showItemTable (_, $, SearchManager, TableView) {
                 console.log("Detail Search starting...")
             });
             
-            var section_header_item_details = '<hr><h3 class="section_header">Item Details</h3>';
-            var section_footer_item_details = '<hr>';
-            
-            $container.append(section_header_item_details);
+            var section_header_item_details = '<hr><div id="header-details" class="section-header"><h3>Item Details</h3></div>';
+            var section_footer_item_details = '';
+			
+			$container.append(section_header_item_details);
             $container.append(this._detailsTableView.render().el);
             $container.append(section_footer_item_details);
+			
+			//$("#section-details").each(function (index, data) {
+			//	$(data).children().each(function (index, data) {
+			//		if ($(data).attr('id') == "body-details")
+			//		{
+			//			$(data).append(this._detailsTableView.render().el)
+			//		}
+			//	})
+			//});
+			
+			var freezer_search_string = "| `freezer_items` | search id=\"" + rowData.values[rowColMapping["id"]] + "\" | table freezer | rename freezer AS id | join [ | `freezers` ] | fields - _* | transpose | rename column AS \"field\", \"row 1\" AS \"value\"";
+            
+            this._freezerSearchManager.set({
+                search: freezer_search_string,
+                earliest_time: "-15m",
+                latest_time: "now",
+                autostart: false,
+                cancelOnUnload: true
+            });
+            
+            this._freezerSearchManager.startSearch();
+            
+            this._freezerTableView = new TableView({
+                id: 'freezer_details_'+rowData.values[rowColMapping["id"]]+'_'+Date.now(),
+                managerid: 'item_freezer' + time,
+                'drilldown': 'none',
+                'wrap': true,
+                'displayRowNumbers': false,
+                'pageSize': '20',
+                //'el': $("#incident_details_exp")
+            });
+
+            this._freezerSearchManager.on("search:start", function(state, job){
+                console.log("Freezer Search starting...")
+            });
+            
+            var section_header_freezer_details = '<div id="header-freezer" class="section-header"><h3>Freezer Details</h3></div>';
+            var section_footer_freezer_details = '<br><hr>';
+            
+            $container.append(section_header_freezer_details);
+            $container.append(this._freezerTableView.render().el);
+            $container.append(section_footer_freezer_details);
         },
         render: function($container, rowData) {
             
