@@ -54,8 +54,7 @@ function showModalItemDetails (splunkUtil, mvc, item) {
 				
     $('body').prepend(modal);
     $('#item_options').modal('show');
-	
-	$("#location").select2();
+		
 	$("#status").select2();
 	
 	var selectOptionsStatus = ['available','on-hold'];
@@ -71,6 +70,8 @@ function showModalItemDetails (splunkUtil, mvc, item) {
 		}
 	});
 	$("#status").prop("disabled", false);  
+	
+	$("#location").select2();
     
     var rest_url = splunkUtil.make_url('/splunkd/__raw/services/freezer_inventory/freezers?action=get_freezers');
     $.getJSON(rest_url, function(data, status) {
@@ -79,11 +80,12 @@ function showModalItemDetails (splunkUtil, mvc, item) {
         $.each(data, function(index, freezer) {
             if (freezer["active"]) {
 				if (freezer["default"]) { 
-					$('#location').append( $('<option></option>').attr("selected", "selected").val(freezer["name"]).html(freezer["name"]) );
-					$('#location').select2('data', {id: freezer["name"], text: freezer["name"]});
+					$('#location').append( $('<option></option>').attr("selected", "selected").val(freezer["id"]).html(freezer["name"]) );
+					// set default selection
+					$('#location').select2('data', {id: freezer["id"], text: freezer["name"]});
 				}
 				else 
-				{ $('#location').append( $('<option></option>').val(freezer["name"]).html(freezer["name"]) ); }
+				{ $('#location').append( $('<option></option>').val(freezer["id"]).html(freezer["name"]) ); }
 			}
         });
     }, "json");
@@ -104,11 +106,13 @@ function showModalItemDetails (splunkUtil, mvc, item) {
 		//e.stopPropagation();
 		//e.stopImmediatePropagation();
 		//e.preventDefault();
+		var id = $('.modal-body').children().find("div.item-details-value").html()
 		var dropdown_status = $("#status").select2('data').text;
-		var dropdown_location = $("#location").select2('data').text;
+		var dropdown_location = $("#location").select2('val');
 		
 		console.log(dropdown_status);
 		console.log(dropdown_location);
+		$(".btn.btn-primary.btn-save").trigger("savemodal", {"id": id, "status": dropdown_status, "freezer": dropdown_location});
 	});	
 }
 
@@ -281,8 +285,7 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView){
         }
     });
 	
-	//$(document).on("deleteclick", ".delete-row-link", function(e, data) {
-	$(document).on("deleteclick", function(e, data) {
+	$(document).on("deleteclick", ".delete-row-link", function(e, data) {
         console.log("e", e);
 		//e.stopPropagation();
 		var id = $.trim(data["id"]);
@@ -303,5 +306,22 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView){
 			mvc.Components.get("myTable_rendered").remove();
 			showItemTable(_, $, SearchManager, TableView);
 		}
+    });
+	
+	$(document).on("savemodal", ".btn.btn-primary.btn-save", function(e, data) {
+        console.log("e", e);
+		data = JSON.stringify(data);
+		console.log(data);
+		
+		var rest_url = splunkUtil.make_url('/splunkd/__raw/services/freezer_inventory/items');
+		var post_data = {
+			action    : 'update_item',
+			item_data : data,
+		};
+		console.log(post_data);
+		$.post( rest_url, post_data, function(data, status) {
+			console.log(data);
+			console.log(status);
+		}, "json");
     });
 });
