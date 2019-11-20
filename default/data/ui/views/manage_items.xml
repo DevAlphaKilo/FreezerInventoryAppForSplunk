@@ -7,7 +7,7 @@
       <fieldForValue>id</fieldForValue>
       <search>
         <query>| `freezers`
-| search active=1 default=1</query>
+| search active=1</query>
         <earliest>-15m</earliest>
         <latest>now</latest>
       </search>
