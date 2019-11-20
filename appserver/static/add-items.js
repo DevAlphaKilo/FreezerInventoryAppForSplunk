@@ -46,7 +46,7 @@ function showItemTable (_, $, mvc, SearchManager, TableView) {
     console.log(myTableObj);
     myTableObj.render();	
 	
-	$("#panel_recent-items").children().addClass("custom-panel-background");
+	$("#panel_recent_items").children().addClass("custom-panel-background");
 	$("#panel_instructions").children().addClass("custom-panel-background");
 	$("#panel_additions").children().addClass("custom-panel-background");
 	$("#panel_controls").children().addClass("custom-panel-background");
