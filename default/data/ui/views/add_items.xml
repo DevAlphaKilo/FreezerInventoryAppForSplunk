@@ -62,14 +62,14 @@
     </input>
   </fieldset>
   <row>
-    <panel depends="$show_instructions$">
+    <panel id="panel_instructions" depends="$show_instructions$">
       <html>
         <h3>Use the tools above to begin your data entry.</h3>
       </html>
     </panel>
   </row>
   <row>
-    <panel depends="$input_complete$">
+    <panel id="panel_additions" depends="$input_complete$">
       <title>Addition(s) Preview</title>
       <table id="new_items">
         <search>
@@ -99,7 +99,7 @@
     </panel>
   </row>
   <row>
-    <panel depends="$input_complete$">
+    <panel id="panel_controls" depends="$input_complete$">
       <html>
         <input id="reset_button" type="button" value="Reset"/>
         <input id="submit_button" type="button" value="Submit Input"/>
@@ -110,7 +110,7 @@
     </panel>
   </row>
     <row>
-    <panel depends="$show_recent$">
+    <panel id="panel_recent-items" depends="$show_recent$">
       <html>
         <div id="recentlyAddedItems"></div>
       </html>

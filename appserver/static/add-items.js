@@ -1,6 +1,4 @@
 
-
-
 function showItemTable (_, $, mvc, SearchManager, TableView) {
 	$("#recentlyAddedItems").append("<div id=\"recentlyAddedItems_label\"><h2>Recently Added Items</h2></div><div id=\"recentlyAddedItems_container\"></div>");
 	
@@ -47,6 +45,11 @@ function showItemTable (_, $, mvc, SearchManager, TableView) {
 
     console.log(myTableObj);
     myTableObj.render();	
+	
+	$("#panel_recent-items").children().addClass("custom-panel-background");
+	$("#panel_instructions").children().addClass("custom-panel-background");
+	$("#panel_additions").children().addClass("custom-panel-background");
+	$("#panel_controls").children().addClass("custom-panel-background");
 }
 
 require([
