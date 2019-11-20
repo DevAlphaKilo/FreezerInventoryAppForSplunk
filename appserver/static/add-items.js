@@ -1,6 +1,7 @@
 
-function showItemTable (_, $, SearchManager, TableView) {
-	
+
+
+function showItemTable (_, $, mvc, SearchManager, TableView) {
 	$("#recentlyAddedItems").append("<div id=\"recentlyAddedItems_label\"><h2>Recently Added Items</h2></div><div id=\"recentlyAddedItems_container\"></div>");
 	
 	var time = Date.now();
@@ -15,10 +16,25 @@ function showItemTable (_, $, SearchManager, TableView) {
         cache: true,
         cancelOnUnload: true
     }, {tokens: true});
+	
+	var searchmanager_items = splunkjs.mvc.Components.get("freezer_items" + time);
+	searchmanager_items.on("search:done", function (state,job) {
+        if (state.content.resultCount === 0) {
+			//unsetToken("show_recent");
+			mvc.Components.getInstance('default', {create: true}).unset("show_recent");
+			mvc.Components.getInstance('submitted', {create: true}).unset("show_recent");
+		}
+		else
+		{
+			//setToken("show_recent", true);
+			mvc.Components.getInstance('default', {create: true}).set("show_recent", true);
+			mvc.Components.getInstance('submitted', {create: true}).set("show_recent", true);
+		}
+    });
     
     // Create a table
     var myTableObj = new TableView({
-        id: "myTable_rendered",
+        id: "recentlyAddedItems_rendered",
         managerid: "freezer_items" + time,
         drilldown: "none",
         pageSize: "10",
@@ -30,7 +46,7 @@ function showItemTable (_, $, SearchManager, TableView) {
     });
 
     console.log(myTableObj);
-    myTableObj.render();
+    myTableObj.render();	
 }
 
 require([
@@ -43,6 +59,10 @@ require([
      'splunkjs/mvc/simplexml/ready!'
 ],
 function(_, $, splunkUtil, mvc, SearchManager, TableView){
+	
+	var defaultTokenModel = mvc.Components.getInstance('default', {create: true});
+	var submittedTokenModel = mvc.Components.getInstance('submitted', {create: true});
+	
 	function setToken(name, value) {
 		defaultTokenModel.set(name, value);
 		submittedTokenModel.set(name, value);
@@ -60,18 +80,16 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView){
 			mvc.Components.get(this.id).val(undefined);
 		});
 		// hide the temp item table after clearing input
-		mvc.Components.getInstance('submitted').unset("input_complete");
-		mvc.Components.getInstance('default').unset("input_complete");
+		unsetToken("input_complete");
 		setToken("show_instructions", true);
-	}
-	
-	var defaultTokenModel = mvc.Components.getInstance('default', {create: true});
-    var submittedTokenModel = mvc.Components.getInstance('submitted', {create: true});
+		$("#recentlyAddedItems_label").remove();
+		mvc.Components.get("recentlyAddedItems_rendered").remove();
+		showItemTable(_, $, mvc, SearchManager, TableView);
+	}	
 	
 	setToken("show_instructions", true);
-	setToken("show_recent", true);
 	
-	showItemTable(_, $, SearchManager, TableView);
+	showItemTable(_, $, mvc, SearchManager, TableView);
 	
     // clear forms when updated
     $("div[class='input input-dropdown'").each(function( index ) {
