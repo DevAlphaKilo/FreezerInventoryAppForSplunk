@@ -85,13 +85,21 @@
         <option name="refresh.display">progressbar</option>
       </single>
     </panel>
-    <panel>
+    <panel depends="$show_onhold$">
       <single>
         <title>Total Items 'on-hold'</title>
         <search>
+          <progress>
+            <condition match="'result.items' &gt; 0">
+              <set token="show_onhold">true</set>
+            </condition>
+            <condition>
+              <unset token="show_onhold"></unset>
+            </condition>
+          </progress>
           <query>| `freezer_items` 
 | search status="on-hold" $freezers$
-| stats dc(id)</query>
+| stats dc(id) AS items</query>
           <earliest>$timespan.earliest$</earliest>
           <latest>$timespan.latest$</latest>
         </search>
