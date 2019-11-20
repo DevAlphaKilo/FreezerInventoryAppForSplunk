@@ -110,7 +110,7 @@
     </panel>
   </row>
     <row>
-    <panel id="panel_recent-items" depends="$show_recent$">
+    <panel id="panel_recent_items" depends="$show_recent$">
       <html>
         <div id="recentlyAddedItems"></div>
       </html>
