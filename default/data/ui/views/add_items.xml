@@ -109,34 +109,11 @@
       </html>
     </panel>
   </row>
-  <row>
+    <row>
     <panel depends="$show_recent$">
-      <table>
-        <title>Item(s) Recently Added</title>
-        <search>
-          <progress>
-            <condition match="'job.resultCount' &gt; 0">
-              <set token="show_recent">true</set>
-            </condition>
-            <condition>
-              <unset token="show_recent"></unset>
-            </condition>
-          </progress>
-          <query>`freezer_items`
-| stats values(item_id) count by _time, item_type, item_subtype, item_sub_subtype
-| sort - _time
-| rename _time AS "Time"
-| eval Time=strftime(Time, "%m/%d/%y %H:%M:%S")</query>
-          <earliest>@d</earliest>
-          <latest>now</latest>
-        </search>
-        <option name="count">5</option>
-        <option name="dataOverlayMode">heatmap</option>
-        <option name="drilldown">none</option>
-        <option name="refresh.display">progressbar</option>
-        <option name="rowNumbers">true</option>
-        <option name="wrap">false</option>
-      </table>
+      <html>
+        <div id="recentlyAddedItems"></div>
+      </html>
     </panel>
   </row>
 </form>
