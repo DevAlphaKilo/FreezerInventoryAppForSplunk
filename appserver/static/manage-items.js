@@ -1,17 +1,3 @@
-
-function deleteItem (splunkUtil, id) {
-	console.log("id", id);
-	var item_delete_uri = splunkUtil.make_url('/splunkd/__raw/services/freezer_inventory/items?action=delete_item&id=' + id);
-	console.log("item_delete_uri", item_delete_uri);
-	var confirm_delete = window.confirm("Are you sure you wantt to delete this item?");
-	if (confirm_delete) {
-		$.get(item_delete_uri, function(data, status) {
-			console.log(data);
-			console.log(status);
-		});
-	}
-}
-
 function showModalItemDetails (splunkUtil, mvc, item) {
 
     var section_header_item_details = '<div>' +
@@ -43,7 +29,7 @@ function showModalItemDetails (splunkUtil, mvc, item) {
     var section_footer_delete = '</div>';
     var section_delete = section_header_delete + section_body_delete + section_footer_delete;
 
-    var modal = ''+
+    var modal = '' +
                 '<div class="modal fade" id="item_options">' +
                 '  <div class="modal-dialog model-sm">' +
                 '    <div class="modal-content">' +
@@ -60,20 +46,14 @@ function showModalItemDetails (splunkUtil, mvc, item) {
                 '      </div>' +
                 '      <div class="modal-footer">' +
                 '        <button type="button" class="btn cancel modal-btn-cancel pull-left" data-dismiss="modal">Cancel</button>' +
-                '        <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>' +
+                '        <button type="button" class="btn btn-primary btn-save" data-dismiss="modal">Save</button>' +
                 '      </div>' +
                 '    </div>' +
                 '  </div>' +
                 '</div>';
+				
     $('body').prepend(modal);
     $('#item_options').modal('show');
-	
-	$(".delete-row-link").on("click", function(e) {
-		console.log("event handler fired (click-delete-row-link)");
-		//e.stopPropagation();
-		var id = $('.modal-body').children().find("div.item-details-value").html()
-		$(".delete-row-link").trigger("deleteclick", {"id": id});
-	});
 	
 	$("#location").select2();
 	$("#status").select2();
@@ -90,7 +70,7 @@ function showModalItemDetails (splunkUtil, mvc, item) {
 			$('#status').append( $('<option></option>').val(option).html(option) );
 		}
 	});
-	 $("#status").prop("disabled", false);  
+	$("#status").prop("disabled", false);  
     
     var rest_url = splunkUtil.make_url('/splunkd/__raw/services/freezer_inventory/freezers?action=get_freezers');
     $.getJSON(rest_url, function(data, status) {
@@ -107,7 +87,29 @@ function showModalItemDetails (splunkUtil, mvc, item) {
 			}
         });
     }, "json");
-    $("#location").prop("disabled", false);    
+    $("#location").prop("disabled", false);  
+
+	// Click Events
+	$(".delete-row-link").on("click", function(e) {
+		console.log("event handler fired (click-delete-row-link)");
+		//e.stopPropagation();
+		//e.stopImmediatePropagation();
+		//e.preventDefault();
+		var id = $('.modal-body').children().find("div.item-details-value").html()
+		$(".delete-row-link").trigger("deleteclick", {"id": id});
+	});
+	
+	$(".btn.btn-primary.btn-save").on("click", function(e) {
+		console.log("event handler fired (click-save-button)");
+		//e.stopPropagation();
+		//e.stopImmediatePropagation();
+		//e.preventDefault();
+		var dropdown_status = $("#status").select2('data').text;
+		var dropdown_location = $("#location").select2('data').text;
+		
+		console.log(dropdown_status);
+		console.log(dropdown_location);
+	});	
 }
 
 function showItemTable (_, $, SearchManager, TableView) {
@@ -118,10 +120,9 @@ function showItemTable (_, $, SearchManager, TableView) {
     };
 	
 	$("#myTable").append("<div id=\"myTable_container\"></div>");
-	
-	
+
 	var time = Date.now();
-    
+
     var CustomCellRenderer = TableView.BaseCellRenderer.extend({
         canRender: function(cell) {
             // Enable this custom cell renderer for 
@@ -145,7 +146,7 @@ function showItemTable (_, $, SearchManager, TableView) {
             });
         }
     });
-    
+
     var HiddenCellRenderer = TableView.BaseCellRenderer.extend({
         canRender: function(cell) {
             // Only use the cell renderer for the specific field
@@ -156,7 +157,7 @@ function showItemTable (_, $, SearchManager, TableView) {
             $td.addClass(cell.field).html(cell.value);
         }
     });
-    
+
     var CustomRowRenderer = TableView.BaseRowExpansionRenderer.extend({
         initialize: function(args) {
             // initialize will run once, so we will set up a search and a chart to be reused.
@@ -214,16 +215,6 @@ function showItemTable (_, $, SearchManager, TableView) {
         },
         render: function($container, rowData) {
             
-
-            //var showFields = ["id","status","input_date","type","action"]
-            //var addedFields = ''
-            //$.each(showFields, function(index, field) {
-            //    addedFields = addedFields + '<b>' + rowData.fields[rowColMapping[field]]  + '</b>: ' + rowData.values[rowColMapping[field]] + '<br>'
-            //});
-            //var containerObj = '<div>' + addedFields + '</div>';
-
-            // Display some of the rowData in the expanded row
-            //$container.append(containerObj);
         }
     });
 
@@ -261,7 +252,7 @@ function showItemTable (_, $, SearchManager, TableView) {
 require([
      'underscore',
      'jquery',
-     'splunk.util',
+     'splunk.util', 
      'splunkjs/mvc',
      'splunkjs/mvc/searchmanager',
      'splunkjs/mvc/tableview',
@@ -274,6 +265,8 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView){
     $(document).on("iconclick", "td", function(e, data) {
         //console.log("e", e);
         //console.log("field", data)
+		
+		$("div#item_options").remove()
 
         if (data.field=="edit") {
             var item_id=($(this).parent().find("td.id")[0].innerHTML);
@@ -288,11 +281,22 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView){
         }
     });
 	
-	$(document).on("deleteclick", ".delete-row-link", function(e, data) {
+	//$(document).on("deleteclick", ".delete-row-link", function(e, data) {
+	$(document).on("deleteclick", function(e, data) {
         console.log("e", e);
+		//e.stopPropagation();
 		var id = $.trim(data["id"]);
         console.log("deleteing item - id: ", id);
-		deleteItem(splunkUtil, id);
+		var confirm_delete = window.confirm("Are you sure you want to delete this item?");
+		if (confirm_delete)
+		{
+			var item_delete_uri = splunkUtil.make_url('/splunkd/__raw/services/freezer_inventory/items?action=delete_item&id=' + id);
+			console.log("item_delete_uri", item_delete_uri);
+			$.get(item_delete_uri, function(data, status) {
+				console.log(data);
+				console.log(status);
+			});
+		}
 		
 		var update_item_table = true;
 		if (update_item_table) {
