@@ -1,0 +1,19 @@
+<setup>
+
+	<block title="Freezer Inventory Setup">
+		<text>Setup the Freezer Inventory App for usage.</text>
+	</block>
+
+	<block title="Configure Application Indexing" endpoint="freezer_inventory/settings" entity="indexing" mode="iter">
+		<input field="enable">
+		  <label>Enabled</label>
+		  <type>text</type>
+		</input>
+		<text>Specify if / where you would like events indexed.</text>
+		<input field="index">
+		  <label>Index</label>
+		  <type>text</type>
+		</input>
+	</block>
+
+</setup>
