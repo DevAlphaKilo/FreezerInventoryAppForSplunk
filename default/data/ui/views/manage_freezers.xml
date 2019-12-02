@@ -29,7 +29,7 @@
     </panel>
     <panel>
       <single>
-        <title>Active Freezers</title>
+        <title>Inactive Freezers</title>
         <search>
           <query>| `freezers`
 | search active=0
@@ -40,6 +40,17 @@
         <option name="drilldown">none</option>
         <option name="refresh.display">progressbar</option>
       </single>
+    </panel>
+  </row>
+  <row>
+    <panel id="warning_duplicate" depends="$show_warning_duplicate$">
+      <html>
+        <div class="container-warning">
+          <div class="container-warning-header">Warning</div>
+          <div class="container-warning-body">You have multiple freezers marked as 'default' status, this is not normal and should be typically avoided. Please do not mark more than one freezer as default!</div>
+          <input id="fix_issue_button" type="button" value="Fix Issue"/>
+        </div>
+      </html>
     </panel>
   </row>
   <row>
