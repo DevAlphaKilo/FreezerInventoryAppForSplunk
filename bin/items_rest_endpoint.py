@@ -4,11 +4,13 @@ import json
 import urllib
 import operator
 import httplib
+import socket
 
 import splunk
 import splunk.appserver.mrsparkle.lib.util as util
 import splunk.entity as entity
 import splunk.rest as rest
+import splunk.input as input
 
 dir = os.path.join(util.get_apps_dir(), 'FreezerInventoryAppForSplunk', 'bin', 'lib')
 if not dir in sys.path:
@@ -178,9 +180,38 @@ class ItemsEndpoint(PersistentServerConnectionApplication):
 
         # Get incident json
         serverResponse, serverContent = rest.simpleRequest(items_uri, sessionKey=sessionKey, jsonargs=item_data, method='POST')
-        logger.debug("items: %s" % serverContent)
-        items = json.loads(serverContent)
-        return self.response(items, httplib.OK)
+        logger.debug("response: %s" % serverResponse)
+        logger.debug("item: %s" % serverContent)
+        item = json.loads(serverContent)
+
+        if int(serverResponse['status']) == 201:
+            # Get Index
+            config = {}
+            config['index'] = 'main'
+            config['enable'] = 'false'
+            
+            restconfig = entity.getEntities('freezer_inventory/settings', count=-1, sessionKey=sessionKey)
+            if len(restconfig) > 0:
+                if 'index' in restconfig['indexing']:
+                    config['index'] = restconfig['indexing']['index']
+                if 'index' in restconfig['indexing']:
+                    config['enable'] = restconfig['indexing']['enable']
+            
+            if config['enable'].lower() in ("true", "1"):
+                event = json.loads(item_data)
+                event['action'] = "added"
+                event['_key'] = item['_key']
+                event = json.dumps(event)
+                
+                logger.debug("Event will be: %s" % event)
+                event = event.encode('utf8')
+                
+                input.submit(event, hostname = socket.gethostname(), sourcetype = 'freezer:item', source = 'items_rest_endpoint.py', index = config['index'])
+
+                logger.debug("Event successfully added")
+
+        
+        return self.response(item, httplib.OK)
         
     def _update_item(self, sessionKey, user, post_data):
         logger.debug("START _update_item()")
@@ -221,12 +252,12 @@ class ItemsEndpoint(PersistentServerConnectionApplication):
                     del provided_keys["id"] 
 
         logger.debug("updated_item: %s" % updated_item)
-        
+
         for key in provided_keys:
             updated_item[key] = provided_keys[key]
-            
+
         item_id = updated_item["_key"]
-        
+
         updated_item = json.dumps(updated_item)
         logger.debug("updated_item: %s" % updated_item)
 
@@ -235,6 +266,32 @@ class ItemsEndpoint(PersistentServerConnectionApplication):
         # Get incident json
         serverResponse, serverContent = rest.simpleRequest(items_uri, sessionKey=sessionKey, jsonargs=updated_item, method='POST')
         logger.debug("items: %s" % serverContent)
+
+        if int(serverResponse['status']) == 200:
+            # Get Index
+            config = {}
+            config['index'] = 'main'
+            config['enable'] = 'false'
+
+            restconfig = entity.getEntities('freezer_inventory/settings', count=-1, sessionKey=sessionKey)
+            if len(restconfig) > 0:
+                if 'index' in restconfig['indexing']:
+                    config['index'] = restconfig['indexing']['index']
+                if 'index' in restconfig['indexing']:
+                    config['enable'] = restconfig['indexing']['enable']
+
+            if config['enable'].lower() in ("true", "1"):
+                event = json.loads(updated_item)
+                event['action'] = "updated"
+                event = json.dumps(event)
+
+                logger.debug("Event will be: %s" % event)
+                event = event.encode('utf8')
+
+                input.submit(event, hostname = socket.gethostname(), sourcetype = 'freezer:item', source = 'items_rest_endpoint.py', index = config['index'])
+
+                logger.debug("Event successfully added")
+
         items = json.loads(serverContent)
         return self.response(items, httplib.OK)
 
@@ -264,5 +321,31 @@ class ItemsEndpoint(PersistentServerConnectionApplication):
 
         # Get item json
         serverResponse, serverContent = rest.simpleRequest(items_uri, sessionKey=sessionKey, method='DELETE')
+        
+        if int(serverResponse['status']) == 200:
+            # Get Index
+            config = {}
+            config['index'] = 'main'
+            config['enable'] = 'false'
+
+            restconfig = entity.getEntities('freezer_inventory/settings', count=-1, sessionKey=sessionKey)
+            if len(restconfig) > 0:
+                if 'index' in restconfig['indexing']:
+                    config['index'] = restconfig['indexing']['index']
+                if 'index' in restconfig['indexing']:
+                    config['enable'] = restconfig['indexing']['enable']
+
+            if config['enable'].lower() in ("true", "1"):
+                event = items
+                event['action'] = "deleted"
+                event = json.dumps(event)
+
+                logger.debug("Event will be: %s" % event)
+                event = event.encode('utf8')
+
+                input.submit(event, hostname = socket.gethostname(), sourcetype = 'freezer:item', source = 'items_rest_endpoint.py', index = config['index'])
+
+                logger.debug("Event successfully added")
+
         logger.debug("items: %s" % json.dumps(items))
         return self.response(items, httplib.OK)
