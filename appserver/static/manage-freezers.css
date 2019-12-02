@@ -50,6 +50,10 @@ td.table_inline_icon {
   margin:0px;
 }
 
+.container-warning {
+	padding: 30px;
+}
+
 .container-warning-header {
 	font-size: 24px;
 	font-weight: bolder;
@@ -65,3 +69,56 @@ td.table_inline_icon {
 	display: block;
 	padding-bottom: 10px;
 }
+
+.button-container {
+	padding: 10px;	
+}
+
+a.button {
+	cursor: pointer;
+	display: table-cell;
+	width: inherit;
+	height: inherit;
+	border-radius: 25px;
+	font-size: large;
+	background-color: black;
+	color: white;
+	vertical-align: middle;
+	text-align: center;
+}
+
+a.button:focus {
+	outline: none;
+	border: none;
+}
+
+/* unvisited link */
+a.button:link {
+	text-decoration: none;
+}
+
+/* visited link */
+a.button:visited {
+	text-decoration: none;
+}
+
+/* mouse over link */
+a.button:hover {
+	text-decoration: none;
+}
+
+/* selected link */
+a.button:active {
+	text-decoration: none;
+}
+
+#button-add {
+	position: relative;
+	display: block;
+	float: right;
+	width: 150px;
+	height: 30px;
+	right: 30px;
+	bottom: 20px;
+}
+

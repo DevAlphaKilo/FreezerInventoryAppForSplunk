@@ -233,4 +233,8 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView){
 			showFreezersTable(_, $, SearchManager, TableView);
 		}
     });
+	
+	/* Add Custom Buttons */
+	var button = '<div id="button-add" class="button-container"><a class="button" href="#">Add Freezer</a></div>';
+	$('body').append(button);
 });

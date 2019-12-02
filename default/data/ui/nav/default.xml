@@ -1,10 +1,10 @@
 <nav search_view="search">
   <view name="freezer_overview" default="true" />
-  <view name="add_items" />
   <collection label="Management">
 	<view name="manage_items" />
 	<view name="manage_freezers" />
   </collection>
+  <view name="add_items" />
   <view name="reports" />
   <view name="alerts" />
   <view name="search" />
