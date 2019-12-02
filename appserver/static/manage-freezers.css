@@ -1,0 +1,67 @@
+
+/* Custom Cell Icons */
+td.icon {
+  text-align: center;
+  align-content: center;
+}
+td.icon i {
+  font-size: 25px;
+  text-shadow: 1px 1px #aaa;
+  align-content: center;
+}
+.icon-inline i {
+  font-size: 18px;
+}
+
+td.table_inline_icon {
+  width: 13px;
+  border-right: 1px solid #d5d5d5;
+}
+
+#myTable [data\-sort\-key='edit'] {
+  min-width: 20px !important;  
+  max-width: 20px !important;
+  width: 20px !important;
+  padding:0px;
+  margin:0px;
+}
+
+#myTable [data\-sort\-key='edit'] a {
+  /* color:transparent !important; */
+  display:none;  
+}
+
+#myTable [data\-sort\-key='active'],
+#myTable [data\-sort\-key='default'] {
+    text-align: center;
+}
+
+#myTable [data\-sort\-key='active'] a,
+#myTable [data\-sort\-key='default'] a {
+  /* color:transparent !important; */
+  font-weight: bold;
+  text-transform: uppercase;
+  float: left;
+  width: 20px;
+}
+
+.dashboard-row .dashboard-panel .panel-body.html {
+  padding:0px;
+  margin:0px;
+}
+
+.container-warning-header {
+	font-size: 24px;
+	font-weight: bolder;
+	text-decoration-line: underline;
+	text-transform: uppercase;
+	color: red;
+	padding-bottom: 10px;
+}
+
+.container-warning-body {
+	font-size: 16px;
+	font-weight: bolder;
+	display: block;
+	padding-bottom: 10px;
+}
