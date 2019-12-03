@@ -1,5 +1,5 @@
 <dashboard script="manage-freezers.js" stylesheet="manage-freezers.css" onunloadCancelJobs="true" hideFilters="true">
-  <label>Manage Freezer(s)</label>
+  <label>Manage Freezers</label>
   <row>
     <panel>
       <html>
