@@ -2,45 +2,19 @@
   <label>Manage Freezer(s)</label>
   <row>
     <panel>
-      <single>
-        <title>Total Freezers</title>
-        <search>
-          <query>| `freezers`
-| stats dc(id)</query>
-          <earliest>-15m</earliest>
-          <latest>now</latest>
-        </search>
-        <option name="drilldown">none</option>
-      </single>
+      <html>
+        <div id="freezersTotal"/>
+      </html>
     </panel>
     <panel>
-      <single>
-        <title>Active Freezers</title>
-        <search>
-          <query>| `freezers`
-| search active=1
-| stats dc(id)</query>
-          <earliest>-15m</earliest>
-          <latest>now</latest>
-        </search>
-        <option name="drilldown">none</option>
-        <option name="refresh.display">progressbar</option>
-      </single>
+      <html>
+        <div id="freezersActive"/>
+      </html>
     </panel>
     <panel>
-      <single>
-        <title>Inactive Freezers</title>
-        <search>
-          <query>| `freezers`
-| search NOT active=1
-| stats dc(id)</query>
-          <earliest>-15m</earliest>
-          <latest>now</latest>
-        </search>
-        <option name="drilldown">none</option>
-        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
-        <option name="refresh.display">progressbar</option>
-      </single>
+      <html>
+        <div id="freezersInactive"/>
+      </html>
     </panel>
   </row>
   <row>

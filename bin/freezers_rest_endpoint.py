@@ -13,9 +13,9 @@ import splunk.rest as rest
 dir = os.path.join(util.get_apps_dir(), 'FreezerInventoryAppForSplunk', 'bin', 'lib')
 if not dir in sys.path:
     sys.path.append(dir)
-    
+
 from FreezerInventoryLogger import *
-   
+
 logger = setupLogger('endpoint-freezers')
 
 if sys.platform == "win32":
@@ -126,7 +126,113 @@ class FreezersEndpoint(PersistentServerConnectionApplication):
         logger.debug("freezers: %s" % serverContent)
         freezers = json.loads(serverContent)
         return self.response(freezers, httplib.OK)
-        
+
+    def _get_freezer_info(self, sessionKey, query_params):
+        logger.debug("START _get_freezer_info()")
+        splunk.setDefault('sessionKey', sessionKey)
+
+        freezers_uri = '/servicesNS/nobody/FreezerInventoryAppForSplunk/storage/collections/data/freezers?output_mode=json'
+
+        # Get item json
+        serverResponse, serverContent = rest.simpleRequest(freezers_uri, sessionKey=sessionKey, method='GET')
+        logger.debug("freezers: %s" % serverContent)
+        freezers = json.loads(serverContent)
+
+        for freezer in freezers:
+            if freezer['id'] == query_params['id']:
+                freezer_info = freezer
+
+        return self.response(freezer_info, httplib.OK)
+    def _add_freezer(self, sessionKey, user, post_data):
+        logger.debug("START _add_freezer()")
+        logger.debug('post_data: %s', post_data)
+        required = ['freezer_data']
+        missing = [r for r in required if r not in post_data]
+        if missing:
+            return self.response("Missing required arguments: %s" % missing, httplib.BAD_REQUEST)
+
+        freezer_data = post_data.pop('freezer_data')
+
+        splunk.setDefault('sessionKey', sessionKey)
+
+        # Parse the JSON
+        #item_data = json.loads(item_data)
+        #logger.debug('item_data: %s', item_data)
+
+        items_uri = '/servicesNS/nobody/FreezerInventoryAppForSplunk/storage/collections/data/freezers'
+
+        serverResponse, serverContent = rest.simpleRequest(items_uri, sessionKey=sessionKey, jsonargs=freezer_data, method='POST')
+        logger.debug("new_freezer: %s" % serverContent)
+        new_freezer = json.loads(serverContent)
+        return self.response(new_freezer, httplib.OK)
+
+    def _update_freezer(self, sessionKey, user, post_data):
+        logger.debug("START _update_freezer()")
+        logger.debug('post_data: %s', post_data)
+        required = ['freezer_data']
+        missing = [r for r in required if r not in post_data]
+        if missing:
+            return self.response("Missing required arguments: %s" % missing, httplib.BAD_REQUEST)
+
+        freezer_data = json.loads(post_data.pop('freezer_data'))
+        logger.debug("freezer_data: %s" % freezer_data)
+
+        splunk.setDefault('sessionKey', sessionKey)
+
+        freezers_uri = '/servicesNS/nobody/FreezerInventoryAppForSplunk/storage/collections/data/freezers?output_mode=json'
+
+        # Get freezers json
+        serverResponse, serverContent = rest.simpleRequest(freezers_uri, sessionKey=sessionKey, method='GET')
+        logger.debug("freezers: %s" % serverContent)
+        all_freezers = json.loads(serverContent)
+
+        logger.debug("all_freezers: %s" % all_freezers)
+        for freezer in all_freezers:
+            logger.debug("freezer: %s" % freezer)
+            if freezer['id'] == freezer_data['id']:
+                update_freezer = freezer
+
+        for key in freezer_data:
+            update_freezer[key] = freezer_data[key]
+
+        freezer_uri = '/servicesNS/nobody/FreezerInventoryAppForSplunk/storage/collections/data/freezers/%s' % update_freezer['_key']
+        logger.debug("freezer_uri: %s" % freezer_uri)
+
+        update_freezer = json.dumps(update_freezer)
+
+        serverResponse, serverContent = rest.simpleRequest(freezer_uri, sessionKey=sessionKey, jsonargs=update_freezer, method='POST')
+        freezer_updated = json.loads(serverContent)
+        logger.debug("freezer_removed: %s" % json.dumps(freezer_updated))
+        return self.response(freezer_updated, httplib.OK)
+
+    def _delete_freezer(self, sessionKey, query_params):
+        logger.debug("START _delete_freezer()")
+        required = ['_key','id']
+        missing = [r for r in required if r not in query_params]
+        if len(missing) > 1:
+            return self.response("Missing a required argument: %s" % missing, httplib.BAD_REQUEST)
+
+        splunk.setDefault('sessionKey', sessionKey)
+
+        if '_key' in query_params:
+            freezer_id = query_params.pop('_key')
+        else:
+            freezer_id = query_params.pop('id')
+            all_freezers = self._get_freezers(sessionKey, query_params)
+            logger.debug("all_freezers: %s" % all_freezers)
+            for freezer in all_freezers['payload']:
+                if freezer['id'] == freezer_id:
+                    freezer_id = freezer['_key']
+
+        freezer_uri = '/servicesNS/nobody/FreezerInventoryAppForSplunk/storage/collections/data/freezers/%s' % freezer_id
+        logger.debug("freezer_uri: %s" % freezer_uri)
+
+        freezer_removed = {'_key': freezer_id, 'action': "removed"}
+
+        serverResponse, serverContent = rest.simpleRequest(freezer_uri, sessionKey=sessionKey, method='DELETE')
+        logger.debug("freezer_removed: %s" % json.dumps(freezer_removed))
+        return self.response(freezer_removed, httplib.OK)
+
     def _get_default_freezer(self, sessionKey, query_params):
         logger.debug("START _get_default_freezer()")
         splunk.setDefault('sessionKey', sessionKey)
@@ -137,22 +243,22 @@ class FreezersEndpoint(PersistentServerConnectionApplication):
         serverResponse, serverContent = rest.simpleRequest(freezers_uri, sessionKey=sessionKey, method='GET')
         logger.debug("freezers: %s" % serverContent)
         freezers = json.loads(serverContent)
-        
+
         default_count = 0
         default_freezer = {}
-        
+
         for freezer in freezers:
             if (freezer['default']):
                 default_count += 1
                 default_freezer = freezer
-            
+
         if (default_count == 1):
             return self.response(default_freezer, httplib.OK)
         else:
             msg = 'Invalid default count: count="{}"'.format(default_count)
             logger.exception(msg)
             return self.response(msg, httplib.BAD_REQUEST)
-            
+
     def _set_default_freezer(self, sessionKey, user, post_data):
         logger.debug("START _set_default_freezer()")
         logger.debug('post_data: %s', post_data)
@@ -165,18 +271,18 @@ class FreezersEndpoint(PersistentServerConnectionApplication):
 
         freezer_data = json.loads(post_data.pop('freezer_data'))
         logger.debug("input_freezer_data: %s" % freezer_data)
-        
+
         splunk.setDefault('sessionKey', sessionKey)
-        
+
         freezers_uri = '/servicesNS/nobody/FreezerInventoryAppForSplunk/storage/collections/data/freezers?output_mode=json'
 
         # Get item json
         serverResponse, serverContent = rest.simpleRequest(freezers_uri, sessionKey=sessionKey, method='GET')
         logger.debug("freezers: %s" % serverContent)
         freezers = json.loads(serverContent)
-        
+
         update_data = []
-        
+
         for freezer in freezers:
             if 'id' in freezer_data:
                 if (freezer["id"] == freezer_data["id"]):
@@ -192,17 +298,17 @@ class FreezersEndpoint(PersistentServerConnectionApplication):
                 else:
                     freezer["default"] = False
                     update_data.append(freezer)
-                    
+
         update_data = json.dumps(update_data)
-                    
+
         logger.debug("update_data: %s" % update_data)
-                
+
         update_uri = '/servicesNS/nobody/FreezerInventoryAppForSplunk/storage/collections/data/freezers/batch_save'
-        
+
         serverResponse, serverContent = rest.simpleRequest(update_uri, sessionKey=sessionKey, jsonargs=update_data, method='POST')
         logger.debug("batch_update: %s" % serverContent)
-        freezers_updated = json.loads(serverContent)   
-        return self.response(freezers_updated, httplib.OK)        
+        freezers_updated = json.loads(serverContent)
+        return self.response(freezers_updated, httplib.OK)
 
     #def _get_freezer_items(self, sessionKey, query_params):
     #    logger.debug("START _get_item_info()")
@@ -231,56 +337,3 @@ class FreezersEndpoint(PersistentServerConnectionApplication):
     #    item_info = json.loads(serverContent)
     #
     #    return self.response(item_info, httplib.OK)
-
-    def _add_freezer(self, sessionKey, user, post_data):
-        logger.debug("START _add_freezer()")
-        logger.debug('post_data: %s', post_data)
-        required = ['item_data']
-        missing = [r for r in required if r not in post_data]
-        if missing:
-            return self.response("Missing required arguments: %s" % missing, httplib.BAD_REQUEST)
-
-        item_data = post_data.pop('item_data')
-
-        splunk.setDefault('sessionKey', sessionKey)
-
-        # Parse the JSON
-        #item_data = json.loads(item_data)
-        #logger.debug('item_data: %s', item_data)
-
-        items_uri = '/servicesNS/nobody/FreezerInventoryAppForSplunk/storage/collections/data/freezers'
-
-        # Get incident json
-        serverResponse, serverContent = rest.simpleRequest(items_uri, sessionKey=sessionKey, jsonargs=item_data, method='POST')
-        logger.debug("items: %s" % serverContent)
-        items = json.loads(serverContent)
-        return self.response(items, httplib.OK)
-
-    def _delete_freezer(self, sessionKey, query_params):
-        logger.debug("START _delete_freezer()")
-        required = ['_key','id']
-        missing = [r for r in required if r not in query_params]
-        if len(missing) > 1:
-            return self.response("Missing a required argument: %s" % missing, httplib.BAD_REQUEST)
-
-        splunk.setDefault('sessionKey', sessionKey)
-
-        if '_key' in query_params:
-            item_id = query_params.pop('_key')
-        else:
-            item_id = query_params.pop('id')
-            all_items = self._get_items(sessionKey, query_params)
-            logger.debug("all_items: %s" % all_items)
-            for item in all_items['payload']:
-                if item['id'] == item_id:
-                    item_id = item['_key']
-
-        items_uri = '/servicesNS/nobody/FreezerInventoryAppForSplunk/storage/collections/data/freezers/%s' % item_id
-        logger.debug("items_uri: %s" % items_uri)
-        
-        items = {'_key': item_id, 'action': "removed"}
-
-        # Get item json
-        serverResponse, serverContent = rest.simpleRequest(items_uri, sessionKey=sessionKey, method='DELETE')
-        logger.debug("items: %s" % json.dumps(items))
-        return self.response(items, httplib.OK)
