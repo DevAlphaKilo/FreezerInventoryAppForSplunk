@@ -83,9 +83,9 @@
           </progress>
           <query>| makeresults $pack_qty$
 | streamstats count AS pack_id
-| eval type="$item_type$", subtype="$item_subtype$", sub_subtype="$item_sub_subtype$", pack_contains="$pack_contains$"
-| eval purchase_date=strftime(strptime("11/13/2019", "%m/%d/%Y"), "%s")
-| eval sealed_date=strftime(strptime("11/13/2019", "%m/%d/%Y"), "%s")
+| eval type="$item_type$", subtype="$item_subtype$", sub_subtype="$item_sub_subtype$", pack_contains="$pack_contains$", purchase_date="$purchase_date$"
+| eval purchase_date=strftime(strptime("$purchase_date$", "%m/%d/%Y"), "%s")
+| eval sealed_date=strftime(strptime("$sealed_date$", "%m/%d/%Y"), "%s")
 | eval input_date=strftime(now(), "%s") 
 | eval id=sha512(pack_id + toString(input_date) + type + subtype + sub_subtype + toString(purchase_date) + toString(sealed_date) + pack_contains)
 | table pack_id, input_date, type, subtype, sub_subtype, purchase_date, sealed_date, pack_contains, id</query>
