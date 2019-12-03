@@ -1,7 +1,6 @@
 function showModalItemDetails (splunkUtil, mvc, item) {
 
-    var section_header_item_details = '<div>' +
-                                      '  <h5 class="item-details-header">Item Details</h5>';
+    var section_header_item_details = '<div>';
     var section_body_item_details   = '  <div class="item-details-row"><div class="item-details-label">ID:</div><div class="item-details-value">' + item["id"] + '</div></div>' +
                                       '  <div class="item-details-row"><div class="item-details-label">Type:</div><div class="item-details-value">' + item["type"] + '</div></div>' +
                                       '  <div class="item-details-row"><div class="item-details-label">Subtype:</div><div class="item-details-value">' + item["subtype"] + '</div></div>' +
@@ -9,8 +8,7 @@ function showModalItemDetails (splunkUtil, mvc, item) {
     var section_footer_item_details = '</div>';
     var section_item_details = section_header_item_details + section_body_item_details + section_footer_item_details;
 
-    var section_header_update = '<div>' +
-                                '  <h5 class="location-header">Update Item</h5>';
+    var section_header_update = '<div>';
     var section_body_update   = '    <div class="control-group shared-controls-controlgroup">' +
                                 '      <label for="status" class="control-label">Item Status:</label>' +
                                 '        <div class="controls"><select name="status" id="status" disabled="disabled"></select></div>' +
@@ -21,8 +19,7 @@ function showModalItemDetails (splunkUtil, mvc, item) {
     var section_footer_update = '</div>';
     var section_update = section_header_update + section_body_update + section_footer_update;
 
-    var section_header_delete = '<div>' +
-                                '  <h5 class="delete-header">Delete Item</h5>';
+    var section_header_delete = '<div>';
     var section_body_delete   = '  <div class="delete-row"><div class="delete-label"></div><div class="delete-value">' +
                                 '<a class="delete-row-link" data-dismiss="modal" href="#">DELETE THIS ITEM</a>' +
                                 '</div></div>';
@@ -35,7 +32,7 @@ function showModalItemDetails (splunkUtil, mvc, item) {
                 '    <div class="modal-content">' +
                 '      <div class="modal-header">' +
                 '        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
-                '        <h4 class="modal-title">Item Options</h4>' +
+                '        <h4 class="modal-title">Item Details</h4>' +
                 '      </div>' +
                 '      <div class="modal-body">' +
                          section_item_details +
@@ -369,7 +366,7 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView){
         $.post( rest_url, post_data, function(data, status) {
             console.log(data);
             console.log(status);
-			mvc.Components.get("myTable_rendered").collapseRow()
+                        mvc.Components.get("myTable_rendered").collapseRow()
         }, "json");
     });
 });

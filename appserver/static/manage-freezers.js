@@ -1,7 +1,7 @@
 
 function showFreezersTable (_, $, mvc, SearchManager, SingleView, TableView) {
-    
-	var defaultTokenModel = mvc.Components.getInstance('default', {create: true});
+
+        var defaultTokenModel = mvc.Components.getInstance('default', {create: true});
     var submittedTokenModel = mvc.Components.getInstance('submitted', {create: true});
 
     function setToken(name, value) {
@@ -13,8 +13,8 @@ function showFreezersTable (_, $, mvc, SearchManager, SingleView, TableView) {
         defaultTokenModel.unset(name);
         submittedTokenModel.unset(name);
     }
-	
-	// Translations from rangemap results to CSS class
+
+        // Translations from rangemap results to CSS class
     var ICONS = {
         edit: 'gear',
         delete: 'x',
@@ -23,9 +23,9 @@ function showFreezersTable (_, $, mvc, SearchManager, SingleView, TableView) {
     };
 
     $("#myTable").append("<div id=\"myTable_container\"></div>");
-	$("#freezersTotal").append("<div id=\"freezersTotal_container\"></div>");
-	$("#freezersActive").append("<div id=\"freezersActive_container\"></div>");
-	$("#freezersInactive").append("<div id=\"freezersInactive_container\"></div>");
+        $("#freezersTotal").append("<div id=\"freezersTotal_container\"></div>");
+        $("#freezersActive").append("<div id=\"freezersActive_container\"></div>");
+        $("#freezersInactive").append("<div id=\"freezersInactive_container\"></div>");
 
     var time = Date.now();
 
@@ -71,9 +71,9 @@ function showFreezersTable (_, $, mvc, SearchManager, SingleView, TableView) {
             $td.addClass(cell.field).html(cell.value);
         }
     });
-	
+
     // Set up search managers
-	var search_defaults = new SearchManager({
+        var search_defaults = new SearchManager({
         id: "default_freezers" + time,
         search: "| `freezers` | search default=\"1\" | stats dc(id) AS total_defaults",
         earliest_time: "-15m",
@@ -82,8 +82,8 @@ function showFreezersTable (_, $, mvc, SearchManager, SingleView, TableView) {
         cache: false,
         cancelOnUnload: true
     }, {tokens: true});
-	
-	var search_freezers_total = new SearchManager({
+
+        var search_freezers_total = new SearchManager({
         id: "total_freezers_" + time,
         search: "| `freezers` | stats dc(id)",
         earliest_time: "-15m",
@@ -163,8 +163,8 @@ function showFreezersTable (_, $, mvc, SearchManager, SingleView, TableView) {
         freezersTotal.render();
         freezersActive.render();
         freezersInactive.render();
-		
-	var mainSearch = mvc.Components.get("default_freezers" + time);
+
+        var mainSearch = mvc.Components.get("default_freezers" + time);
     //console.log(mainSearch)
     var myResults = mainSearch.data("preview", { count: 1, offset: 0 });
 
@@ -222,8 +222,8 @@ function(_, $, splunkUtil, mvc, SearchManager, SingleView, TableView){
         console.log("e", e);
         console.log("field", data)
 
-		$("div#add_freezer").remove()
-		$("div#freezer_settings").remove()
+                $("div#add_freezer").remove()
+                $("div#freezer_settings").remove()
 
         var section_header_delete = '<div>' +
                                 '  <h5 class="delete-header">Delete Freezer</h5>';
@@ -307,10 +307,10 @@ function(_, $, splunkUtil, mvc, SearchManager, SingleView, TableView){
             });
             //setTimeout("location.reload();", 0);
             mvc.Components.get("myTable_rendered").remove();
-			mvc.Components.get("freezersTotal_rendered").remove();
-			mvc.Components.get("freezersActive_rendered").remove();
-			mvc.Components.get("freezersInactive_rendered").remove();
-			showFreezersTable(_, $, mvc, SearchManager, SingleView, TableView);
+                        mvc.Components.get("freezersTotal_rendered").remove();
+                        mvc.Components.get("freezersActive_rendered").remove();
+                        mvc.Components.get("freezersInactive_rendered").remove();
+                        showFreezersTable(_, $, mvc, SearchManager, SingleView, TableView);
         }
     });
 
@@ -396,10 +396,10 @@ function(_, $, splunkUtil, mvc, SearchManager, SingleView, TableView){
         var update_item_table = true;
         if (update_item_table) {
             mvc.Components.get("myTable_rendered").remove();
-			mvc.Components.get("freezersTotal_rendered").remove();
-			mvc.Components.get("freezersActive_rendered").remove();
-			mvc.Components.get("freezersInactive_rendered").remove();
-			showFreezersTable(_, $, mvc, SearchManager, SingleView, TableView);
+                        mvc.Components.get("freezersTotal_rendered").remove();
+                        mvc.Components.get("freezersActive_rendered").remove();
+                        mvc.Components.get("freezersInactive_rendered").remove();
+                        showFreezersTable(_, $, mvc, SearchManager, SingleView, TableView);
         }
     });
 
@@ -409,9 +409,9 @@ function(_, $, splunkUtil, mvc, SearchManager, SingleView, TableView){
 
     $("#button-add a").on("click", function(e) {
         console.log("Button Clicked: Add Freezer");
-		
+
         $("div#add_freezer").remove()
-		$("div#freezer_settings").remove()
+                $("div#freezer_settings").remove()
 
         var modal = '' +
                 '<div class="modal fade" id="add_freezer">' +
@@ -471,11 +471,11 @@ function(_, $, splunkUtil, mvc, SearchManager, SingleView, TableView){
             $.post( rest_url, post_data, function(data, status) {
                 console.log(data);
                 console.log(status);
-					mvc.Components.get("myTable_rendered").remove();
-					mvc.Components.get("freezersTotal_rendered").remove();
-					mvc.Components.get("freezersActive_rendered").remove();
-					mvc.Components.get("freezersInactive_rendered").remove();
-					showFreezersTable(_, $, mvc, SearchManager, SingleView, TableView);
+                                        mvc.Components.get("myTable_rendered").remove();
+                                        mvc.Components.get("freezersTotal_rendered").remove();
+                                        mvc.Components.get("freezersActive_rendered").remove();
+                                        mvc.Components.get("freezersInactive_rendered").remove();
+                                        showFreezersTable(_, $, mvc, SearchManager, SingleView, TableView);
             }, "json");
 
         }, "json");
@@ -502,10 +502,10 @@ function(_, $, splunkUtil, mvc, SearchManager, SingleView, TableView){
         }, "json");
 
         //setTimeout("location.reload();", 0);
-		mvc.Components.get("myTable_rendered").remove();
-		mvc.Components.get("freezersTotal_rendered").remove();
-		mvc.Components.get("freezersActive_rendered").remove();
-		mvc.Components.get("freezersInactive_rendered").remove();
-		showFreezersTable(_, $, mvc, SearchManager, SingleView, TableView);
+                mvc.Components.get("myTable_rendered").remove();
+                mvc.Components.get("freezersTotal_rendered").remove();
+                mvc.Components.get("freezersActive_rendered").remove();
+                mvc.Components.get("freezersInactive_rendered").remove();
+                showFreezersTable(_, $, mvc, SearchManager, SingleView, TableView);
     });
 });
