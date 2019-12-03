@@ -369,6 +369,7 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView){
         $.post( rest_url, post_data, function(data, status) {
             console.log(data);
             console.log(status);
+			mvc.Components.get("myTable_rendered").collapseRow()
         }, "json");
     });
 });
