@@ -15,9 +15,9 @@ import splunk.input as input
 dir = os.path.join(util.get_apps_dir(), 'FreezerInventoryAppForSplunk', 'bin', 'lib')
 if not dir in sys.path:
     sys.path.append(dir)
-    
+
 from FreezerInventoryLogger import *
-   
+
 logger = setupLogger('endpoint-items')
 
 if sys.platform == "win32":
@@ -189,30 +189,30 @@ class ItemsEndpoint(PersistentServerConnectionApplication):
             config = {}
             config['index'] = 'main'
             config['enable'] = 'false'
-            
+
             restconfig = entity.getEntities('freezer_inventory/settings', count=-1, sessionKey=sessionKey)
             if len(restconfig) > 0:
                 if 'index' in restconfig['indexing']:
                     config['index'] = restconfig['indexing']['index']
                 if 'index' in restconfig['indexing']:
                     config['enable'] = restconfig['indexing']['enable']
-            
+
             if config['enable'].lower() in ("true", "1"):
                 event = json.loads(item_data)
                 event['action'] = "added"
                 event['_key'] = item['_key']
                 event = json.dumps(event)
-                
+
                 logger.debug("Event will be: %s" % event)
                 event = event.encode('utf8')
-                
+
                 input.submit(event, hostname = socket.gethostname(), sourcetype = 'freezer:item', source = 'items_rest_endpoint.py', index = config['index'])
 
                 logger.debug("Event successfully added")
 
-        
+
         return self.response(item, httplib.OK)
-        
+
     def _update_item(self, sessionKey, user, post_data):
         logger.debug("START _update_item()")
         logger.debug('post_data: %s', post_data)
@@ -249,7 +249,7 @@ class ItemsEndpoint(PersistentServerConnectionApplication):
             elif 'id' in item_data:
                 if item["id"] == item_data["id"]:
                     updated_item = item
-                    del provided_keys["id"] 
+                    del provided_keys["id"]
 
         logger.debug("updated_item: %s" % updated_item)
 
@@ -316,12 +316,12 @@ class ItemsEndpoint(PersistentServerConnectionApplication):
 
         items_uri = '/servicesNS/nobody/FreezerInventoryAppForSplunk/storage/collections/data/items/%s' % item_id
         logger.debug("items_uri: %s" % items_uri)
-        
+
         items = {'_key': item_id, 'action': "removed"}
 
         # Get item json
         serverResponse, serverContent = rest.simpleRequest(items_uri, sessionKey=sessionKey, method='DELETE')
-        
+
         if int(serverResponse['status']) == 200:
             # Get Index
             config = {}
