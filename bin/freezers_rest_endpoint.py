@@ -202,7 +202,7 @@ class FreezersEndpoint(PersistentServerConnectionApplication):
 
         serverResponse, serverContent = rest.simpleRequest(freezer_uri, sessionKey=sessionKey, jsonargs=update_freezer, method='POST')
         freezer_updated = json.loads(serverContent)
-        logger.debug("freezer_removed: %s" % json.dumps(freezer_updated))
+        logger.debug("freezer_updated: %s" % json.dumps(freezer_updated))
         return self.response(freezer_updated, httplib.OK)
 
     def _delete_freezer(self, sessionKey, query_params):
