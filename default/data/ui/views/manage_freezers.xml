@@ -23,7 +23,16 @@
         <div class="container-warning">
           <div class="container-warning-header">Warning</div>
           <div class="container-warning-body">You have multiple freezers marked as 'default' status, this is not normal and should be typically avoided. Please do not mark more than one freezer as default!</div>
-          <input id="fix_issue_button" type="button" value="Fix Issue"/>
+          <input id="fix_issue_duplicate" class="fix_issue_button" type="button" value="Fix Issue"/>
+        </div>
+      </html>
+    </panel>
+    <panel id="warning_none" depends="$show_warning_none$">
+      <html>
+        <div class="container-warning">
+          <div class="container-warning-header">Warning</div>
+          <div class="container-warning-body">You currently do not have a freezer set as 'default' status, please select one freezer to be your default freezer for new items to be placed in. Only one freezer can should be marked as 'default' at any period in time.</div>
+          <input id="fix_issue_none" class="fix_issue_button"  type="button" value="Fix Issue"/>
         </div>
       </html>
     </panel>

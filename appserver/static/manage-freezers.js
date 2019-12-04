@@ -1,7 +1,7 @@
 
 function showFreezersTable (_, $, mvc, SearchManager, SingleView, TableView) {
 
-        var defaultTokenModel = mvc.Components.getInstance('default', {create: true});
+    var defaultTokenModel = mvc.Components.getInstance('default', {create: true});
     var submittedTokenModel = mvc.Components.getInstance('submitted', {create: true});
 
     function setToken(name, value) {
@@ -164,7 +164,7 @@ function showFreezersTable (_, $, mvc, SearchManager, SingleView, TableView) {
         freezersActive.render();
         freezersInactive.render();
 
-        var mainSearch = mvc.Components.get("default_freezers" + time);
+    var mainSearch = mvc.Components.get("default_freezers" + time);
     //console.log(mainSearch)
     var myResults = mainSearch.data("preview", { count: 1, offset: 0 });
 
@@ -172,6 +172,16 @@ function showFreezersTable (_, $, mvc, SearchManager, SingleView, TableView) {
         // The full data object
         var results = myResults.data();
         var defaultCount = parseInt(results.rows[0]);
+		if (defaultCount == 0)
+        {
+            //console.log("Default count is > than 1");
+            setToken("show_warning_none", "true");
+        }
+        else
+        {
+            //console.log("Default count is <= than 1");
+            unsetToken("show_warning_none");
+        }
         if (defaultCount > 1)
         {
             //console.log("Default count is > than 1");
@@ -202,27 +212,40 @@ require([
 ],
 function(_, $, splunkUtil, mvc, SearchManager, SingleView, TableView){
 
+	var defaultTokenModel = mvc.Components.getInstance('default', {create: true});
+    var submittedTokenModel = mvc.Components.getInstance('submitted', {create: true});
+
+	function setToken(name, value) {
+        defaultTokenModel.set(name, value);
+        submittedTokenModel.set(name, value);
+    }
+
+    function unsetToken(name) {
+        defaultTokenModel.unset(name);
+        submittedTokenModel.unset(name);
+    }
+
     var section_header_info = '<div>'
-	var section_body_info   =   '<div class="control-group shared-controls-controlgroup">' +
-								'  <label for="name" class="control-label">Name:</label>' +
-								'    <div class="controls"><input type="text" name="name" id="name" ></input></div>' +
-								'  <label for="location" class="control-label">Location:</label>' +
-								'    <div class="controls"><input type="text" name="location" id="location" ></div>' +
-								'  <label for="active" class="control-label">Active:</label>' +
-								'    <div role="group" class="controls controls-join">' +
-								'		<div class="control btn-group btn-group-radio shared-controls-booleanradiocontrol control-default" data-view="views/shared/controls/BooleanRadioControl" data-name="inputRadioBoolean">' +
-								'			<button type="button" role="button" name="inputRadioBoolean" aria-label="Yes" class="btn btn-status" data-value="1" aria-pressed="false">Yes</button>' +
-								'			<button type="button" role="button" name="inputRadioBoolean" aria-label="No" class="btn btn-status active" data-value="0" aria-pressed="true">No</button>' +
-								'		</div>' +
-								'	</div>' +
-								'  <label for="default" class="control-label">Default:</label>' +
-								'    <div role="group" class="controls controls-join">' +
-								'		<div class="control btn-group btn-group-radio shared-controls-booleanradiocontrol control-default" data-view="views/shared/controls/BooleanRadioControl" data-name="inputRadioBoolean">' +
-								'			<button type="button" role="button" name="inputRadioBoolean" aria-label="Yes" class="btn btn-default" data-value="1" aria-pressed="false">Yes</button>' +
-								'			<button type="button" role="button" name="inputRadioBoolean" aria-label="No" class="btn btn-default active" data-value="0" aria-pressed="true">No</button>' +
-								'		</div>' +
-								'	</div>' +
-								'</div>';
+        var section_body_info   =   '<div class="control-group shared-controls-controlgroup">' +
+                                    '  <label for="name" class="control-label">Name:</label>' +
+                                    '    <div class="controls"><input type="text" name="name" id="name" ></input></div>' +
+                                    '  <label for="location" class="control-label">Location:</label>' +
+                                    '    <div class="controls"><input type="text" name="location" id="location" ></div>' +
+                                    '  <label for="active" class="control-label">Active:</label>' +
+                                    '    <div role="group" class="controls controls-join">' +
+                                    '                <div class="control btn-group btn-group-radio shared-controls-booleanradiocontrol control-default" data-view="views/shared/controls/BooleanRadioControl" data-name="inputRadioBoolean">' +
+                                    '                        <button type="button" role="button" name="inputRadioBoolean" aria-label="Yes" class="btn btn-status" data-value="1" aria-pressed="false">Yes</button>' +
+                                    '                        <button type="button" role="button" name="inputRadioBoolean" aria-label="No" class="btn btn-status active" data-value="0" aria-pressed="true">No</button>' +
+                                    '                </div>' +
+                                    '        </div>' +
+                                    '  <label for="default" class="control-label">Default:</label>' +
+                                    '    <div role="group" class="controls controls-join">' +
+                                    '                <div class="control btn-group btn-group-radio shared-controls-booleanradiocontrol control-default" data-view="views/shared/controls/BooleanRadioControl" data-name="inputRadioBoolean">' +
+                                    '                        <button type="button" role="button" name="inputRadioBoolean" aria-label="Yes" class="btn btn-default" data-value="1" aria-pressed="false">Yes</button>' +
+                                    '                        <button type="button" role="button" name="inputRadioBoolean" aria-label="No" class="btn btn-default active" data-value="0" aria-pressed="true">No</button>' +
+                                    '                </div>' +
+                                    '        </div>' +
+                                    '</div>';
     var section_footer_info = '</div>';
     var section_info = section_header_info + section_body_info + section_footer_info;
 
@@ -235,55 +258,55 @@ function(_, $, splunkUtil, mvc, SearchManager, SingleView, TableView){
                 $("div#add_freezer").remove()
                 $("div#freezer_settings").remove()
 
-		var section_header_delete = '<div>';
-		var section_body_delete   = '  <div class="delete-row"><div class="delete-label"></div><div class="delete-value">' +
-									'<a data-view="views/shared/Button" class="btn btn-pill btn-view btn-delete" href="#" tabindex="" title="delete" target="" rel="" data-dismiss="modal"><i class="icon-trash" style="font-size: 1.5em; vertical-align: middle;"></i><span class="btn-label" data-role="label">Delete This Item</span></a>';
-		var section_footer_delete = '</div>';
-		var section_delete = section_header_delete + section_body_delete + section_footer_delete;
+                var section_header_delete = '<div>';
+                var section_body_delete   = '  <div class="delete-row"><div class="delete-label"></div><div class="delete-value">' +
+                                            '<a data-view="views/shared/Button" class="btn btn-pill btn-view btn-delete" href="#" tabindex="" title="delete" target="" rel="" data-dismiss="modal"><i class="icon-trash" style="font-size: 1.5em; vertical-align: middle;"></i><span class="btn-label" data-role="label">Delete This Item</span></a>';
+                var section_footer_delete = '</div>';
+                var section_delete = section_header_delete + section_body_delete + section_footer_delete;
 
         var modal = '' +
-                '<div class="modal fade" id="freezer_settings">' +
-                '  <div class="modal-dialog model-sm">' +
-                '    <div class="modal-content">' +
-                '      <div class="modal-header">' +
-                '        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
-                '        <h4 class="modal-title">Freezer Settings</h4>' +
-                '      </div>' +
-                '      <div class="modal-body">' +
-                         section_info +
-                '       <hr>' +
-                         section_delete +
-                '      </div>' +
-                '      <div class="modal-footer">' +
-                '        <button type="button" class="btn cancel modal-btn-cancel pull-left" data-dismiss="modal">Cancel</button>' +
-                '        <button type="button" class="btn btn-primary btn-save" data-dismiss="modal">Save</button>' +
-                '      </div>' +
-                '    </div>' +
-                '  </div>' +
-                '</div>';
+                    '<div class="modal fade" id="freezer_settings">' +
+                    '  <div class="modal-dialog model-sm">' +
+                    '    <div class="modal-content">' +
+                    '      <div class="modal-header">' +
+                    '        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
+                    '        <h4 class="modal-title">Freezer Settings</h4>' +
+                    '      </div>' +
+                    '      <div class="modal-body">' +
+                                     section_info +
+                    '       <hr>' +
+                                     section_delete +
+                    '      </div>' +
+                    '      <div class="modal-footer">' +
+                    '        <button type="button" class="btn cancel modal-btn-cancel pull-left" data-dismiss="modal">Cancel</button>' +
+                    '        <button type="button" class="btn btn-primary btn-save" data-dismiss="modal">Save</button>' +
+                    '      </div>' +
+                    '    </div>' +
+                    '  </div>' +
+                    '</div>';
 
         $('body').prepend(modal);
         $('#freezer_settings').modal('show');
-		
-		$("div button.btn-status").click(function() {
-			// remove previous active button
-			$("div button.btn-status[aria-pressed='true']").attr("aria-pressed","false");
-			$("div button.btn-status.active").removeClass("active");
-			
-			// set clicked button as active
-			$(this).addClass("active");
-			$(this).attr("aria-pressed","true");
-		});
+                
+        $("div button.btn-status").click(function() {
+                // remove previous active button
+                $("div button.btn-status[aria-pressed='true']").attr("aria-pressed","false");
+                $("div button.btn-status.active").removeClass("active");
+                
+                // set clicked button as active
+                $(this).addClass("active");
+                $(this).attr("aria-pressed","true");
+        });
 
-		$("div button.btn-default").click(function() {
-			// remove previous active button
-			$("div button.btn-default[aria-pressed='true']").attr("aria-pressed","false");
-			$("div button.btn-default.active").removeClass("active");
-			
-			// set clicked button as active
-			$(this).addClass("active");
-			$(this).attr("aria-pressed","true");
-		});
+        $("div button.btn-default").click(function() {
+                // remove previous active button
+                $("div button.btn-default[aria-pressed='true']").attr("aria-pressed","false");
+                $("div button.btn-default.active").removeClass("active");
+                
+                // set clicked button as active
+                $(this).addClass("active");
+                $(this).attr("aria-pressed","true");
+        });
 
         var freezer_id = ($(this).parent().find("td.id")[0].innerHTML);
         console.log(freezer_id);
@@ -294,24 +317,24 @@ function(_, $, splunkUtil, mvc, SearchManager, SingleView, TableView){
                 console.log("freezer_info: ", data);
                 $("#name").val(data['name']);
                 $("#location").val(data['location']);
-				if (data['active']) 
-				{
-					// remove previous active button
-					$("div button.btn-status[aria-pressed='true']").attr("aria-pressed","false");
-					$("div button.btn-status.active").removeClass("active");
-					// set clicked button as active
-					$("div button.btn-status[aria-label='Yes']").addClass("active");
-					$("div button.btn-status[aria-label='Yes']").attr("aria-pressed","true");
-				}
-				if (data['default']) 
-				{
-					// remove previous active button
-					$("div button.btn-default[aria-pressed='true']").attr("aria-pressed","false");
-					$("div button.btn-default.active").removeClass("active");
-					// set clicked button as active
-					$("div button.btn-default[aria-label='Yes']").addClass("active");
-					$("div button.btn-default[aria-label='Yes']").attr("aria-pressed","true");
-				}
+                if (data['active']) 
+                {
+                    // remove previous active button
+                    $("div button.btn-status[aria-pressed='true']").attr("aria-pressed","false");
+                    $("div button.btn-status.active").removeClass("active");
+                    // set clicked button as active
+                    $("div button.btn-status[aria-label='Yes']").addClass("active");
+                    $("div button.btn-status[aria-label='Yes']").attr("aria-pressed","true");
+                }
+                if (data['default']) 
+                {
+                    // remove previous active button
+                    $("div button.btn-default[aria-pressed='true']").attr("aria-pressed","false");
+                    $("div button.btn-default.active").removeClass("active");
+                    // set clicked button as active
+                    $("div button.btn-default[aria-label='Yes']").addClass("active");
+                    $("div button.btn-default[aria-label='Yes']").attr("aria-pressed","true");
+                }
             }, "json");
         }
 
@@ -351,20 +374,20 @@ function(_, $, splunkUtil, mvc, SearchManager, SingleView, TableView){
             });
             //setTimeout("location.reload();", 0);
             mvc.Components.get("myTable_rendered").remove();
-			mvc.Components.get("freezersTotal_rendered").remove();
-			mvc.Components.get("freezersActive_rendered").remove();
-			mvc.Components.get("freezersInactive_rendered").remove();
-			showFreezersTable(_, $, mvc, SearchManager, SingleView, TableView);
+            mvc.Components.get("freezersTotal_rendered").remove();
+            mvc.Components.get("freezersActive_rendered").remove();
+            mvc.Components.get("freezersInactive_rendered").remove();
+            showFreezersTable(_, $, mvc, SearchManager, SingleView, TableView);
         }
     });
 
-    $("#fix_issue_button").on("click", function(e) {
+    $(".fix_issue_button").on("click", function(e) {
 
         $("div#set_default").remove()
 
         var section_header_fix = '<div>'
         var section_body_fix   = '    <div class="control-group shared-controls-controlgroup">' +
-                                    '      <label for="location" class="control-label">Storage Location:</label>' +
+                                    '      <label for="location" class="control-label">Freezer Selection:</label>' +
                                     '        <div class="controls"><select name="location" id="location" disabled="disabled"></select></div>' +
                                     '    </div>';
         var section_footer_fix = '</div>';
@@ -440,10 +463,10 @@ function(_, $, splunkUtil, mvc, SearchManager, SingleView, TableView){
         var update_item_table = true;
         if (update_item_table) {
             mvc.Components.get("myTable_rendered").remove();
-			mvc.Components.get("freezersTotal_rendered").remove();
-			mvc.Components.get("freezersActive_rendered").remove();
-			mvc.Components.get("freezersInactive_rendered").remove();
-			showFreezersTable(_, $, mvc, SearchManager, SingleView, TableView);
+            mvc.Components.get("freezersTotal_rendered").remove();
+            mvc.Components.get("freezersActive_rendered").remove();
+            mvc.Components.get("freezersInactive_rendered").remove();
+            showFreezersTable(_, $, mvc, SearchManager, SingleView, TableView);
         }
     });
 
@@ -458,46 +481,46 @@ function(_, $, splunkUtil, mvc, SearchManager, SingleView, TableView){
                 $("div#freezer_settings").remove()
 
         var modal = '' +
-                '<div class="modal fade" id="add_freezer">' +
-                '  <div class="modal-dialog model-sm">' +
-                '    <div class="modal-content">' +
-                '      <div class="modal-header">' +
-                '        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
-                '        <h4 class="modal-title">New Freezer Information</h4>' +
-                '      </div>' +
-                '      <div class="modal-body">' +
-                         section_info +
-                '      </div>' +
-                '      <div class="modal-footer">' +
-                '        <button type="button" class="btn cancel modal-btn-cancel pull-left" data-dismiss="modal">Cancel</button>' +
-                '        <button type="button" class="btn btn-primary btn-save" data-dismiss="modal">Save</button>' +
-                '      </div>' +
-                '    </div>' +
-                '  </div>' +
-                '</div>';
+                    '<div class="modal fade" id="add_freezer">' +
+                    '  <div class="modal-dialog model-sm">' +
+                    '    <div class="modal-content">' +
+                    '      <div class="modal-header">' +
+                    '        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
+                    '        <h4 class="modal-title">New Freezer Information</h4>' +
+                    '      </div>' +
+                    '      <div class="modal-body">' +
+                             section_info +
+                    '      </div>' +
+                    '      <div class="modal-footer">' +
+                    '        <button type="button" class="btn cancel modal-btn-cancel pull-left" data-dismiss="modal">Cancel</button>' +
+                    '        <button type="button" class="btn btn-primary btn-save" data-dismiss="modal">Save</button>' +
+                    '      </div>' +
+                    '    </div>' +
+                    '  </div>' +
+                    '</div>';
 
         $('body').prepend(modal);
         $('#add_freezer').modal('show');
-		
-		$("div button.btn-status").click(function() {
-			// remove previous active button
-			$("div button.btn-status[aria-pressed='true']").attr("aria-pressed","false");
-			$("div button.btn-status.active").removeClass("active");
-			
-			// set clicked button as active
-			$(this).addClass("active");
-			$(this).attr("aria-pressed","true");
-		});
+                
+                $("div button.btn-status").click(function() {
+                        // remove previous active button
+                        $("div button.btn-status[aria-pressed='true']").attr("aria-pressed","false");
+                        $("div button.btn-status.active").removeClass("active");
+                        
+                        // set clicked button as active
+                        $(this).addClass("active");
+                        $(this).attr("aria-pressed","true");
+                });
 
-		$("div button.btn-default").click(function() {
-			// remove previous active button
-			$("div button.btn-default[aria-pressed='true']").attr("aria-pressed","false");
-			$("div button.btn-default.active").removeClass("active");
-			
-			// set clicked button as active
-			$(this).addClass("active");
-			$(this).attr("aria-pressed","true");
-		});
+                $("div button.btn-default").click(function() {
+                        // remove previous active button
+                        $("div button.btn-default[aria-pressed='true']").attr("aria-pressed","false");
+                        $("div button.btn-default.active").removeClass("active");
+                        
+                        // set clicked button as active
+                        $(this).addClass("active");
+                        $(this).attr("aria-pressed","true");
+                });
 
         $(".btn.btn-primary.btn-save").on("click", function(e) {
             console.log("event handler fired (click-save-button [add freezer])");
@@ -505,9 +528,9 @@ function(_, $, splunkUtil, mvc, SearchManager, SingleView, TableView){
             var location = $("#location").val();
             var isActive = $("div button.btn-status.active[aria-pressed='true']").data("value");
             var isDefault = $("div button.btn-default.active[aria-pressed='true']").data("value");
-			
-			console.log("isActive: ", isActive);
-			console.log("isDefault: ", isDefault);
+                        
+                        console.log("isActive: ", isActive);
+                        console.log("isDefault: ", isDefault);
 
             $(".btn.btn-primary.btn-save").trigger("savemodal-add_new_freezer", {"name": name, "location": location, "active": isActive, "default": isDefault});
         });
@@ -538,11 +561,11 @@ function(_, $, splunkUtil, mvc, SearchManager, SingleView, TableView){
             $.post( rest_url, post_data, function(data, status) {
                 console.log(data);
                 console.log(status);
-				mvc.Components.get("myTable_rendered").remove();
-				mvc.Components.get("freezersTotal_rendered").remove();
-				mvc.Components.get("freezersActive_rendered").remove();
-				mvc.Components.get("freezersInactive_rendered").remove();
-				showFreezersTable(_, $, mvc, SearchManager, SingleView, TableView);
+                mvc.Components.get("myTable_rendered").remove();
+                mvc.Components.get("freezersTotal_rendered").remove();
+                mvc.Components.get("freezersActive_rendered").remove();
+                mvc.Components.get("freezersInactive_rendered").remove();
+                showFreezersTable(_, $, mvc, SearchManager, SingleView, TableView);
             }, "json");
 
         }, "json");
@@ -569,10 +592,10 @@ function(_, $, splunkUtil, mvc, SearchManager, SingleView, TableView){
         }, "json");
 
         //setTimeout("location.reload();", 0);
-		mvc.Components.get("myTable_rendered").remove();
-		mvc.Components.get("freezersTotal_rendered").remove();
-		mvc.Components.get("freezersActive_rendered").remove();
-		mvc.Components.get("freezersInactive_rendered").remove();
-		showFreezersTable(_, $, mvc, SearchManager, SingleView, TableView);
+        mvc.Components.get("myTable_rendered").remove();
+        mvc.Components.get("freezersTotal_rendered").remove();
+        mvc.Components.get("freezersActive_rendered").remove();
+        mvc.Components.get("freezersInactive_rendered").remove();
+        showFreezersTable(_, $, mvc, SearchManager, SingleView, TableView);
     });
 });
