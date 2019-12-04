@@ -50,6 +50,11 @@ td.table_inline_icon {
   margin:0px;
 }
 
+.delete-row {
+	display: block;
+	text-align: center;
+}
+
 .container-warning {
 	padding: 30px;
 }
