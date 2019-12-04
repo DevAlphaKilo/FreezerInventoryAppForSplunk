@@ -50,9 +50,52 @@ td.table_inline_icon {
   margin:0px;
 }
 
+.modal-header {
+	margin-bottom: 20px;
+}
+
+div.control-group label {
+	float: left;
+	font-weight: bold;
+	width: 50px;
+	padding-right: 60px;
+	margin: 0px;
+}
+
+div.controls input {
+	width: 100%;
+}
+
+.btn-group-radio {
+	margin-bottom: 10px;
+}
+
 .delete-row {
 	display: block;
 	text-align: center;
+	font-size: large;
+	font-weight: bold;
+	font-family: monospace;
+}
+
+.btn-view {
+	display: inline-block;
+	border: 1px solid transparent;
+	border-radius: 3px;
+	font-size: 14px;
+	line-height: 20px;
+	text-align: center;
+	vertical-align: middle;
+	cursor: pointer;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	text-decoration: none;
+	background-color: transparent;
+	padding: 5px 14px;
+}
+
+.btn-label {
+	padding-left: 0.5em;
 }
 
 .container-warning {

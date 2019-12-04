@@ -235,12 +235,11 @@ function(_, $, splunkUtil, mvc, SearchManager, SingleView, TableView){
                 $("div#add_freezer").remove()
                 $("div#freezer_settings").remove()
 
-        var section_header_delete = '<div>';
-        var section_body_delete   = '  <div class="delete-row"><div class="delete-label"></div><div class="delete-value">' +
-                                '<a class="delete-row-link" data-dismiss="modal" href="#">DELETE THIS FREEZER</a>' +
-                                '</div></div>';
-        var section_footer_delete = '</div>';
-        var section_delete = section_header_delete + section_body_delete + section_footer_delete;
+		var section_header_delete = '<div>';
+		var section_body_delete   = '  <div class="delete-row"><div class="delete-label"></div><div class="delete-value">' +
+									'<a data-view="views/shared/Button" class="btn btn-pill btn-view btn-delete" href="#" tabindex="" title="delete" target="" rel="" data-dismiss="modal"><i class="icon-trash" style="font-size: 1.5em; vertical-align: middle;"></i><span class="btn-label" data-role="label">Delete This Item</span></a>';
+		var section_footer_delete = '</div>';
+		var section_delete = section_header_delete + section_body_delete + section_footer_delete;
 
         var modal = '' +
                 '<div class="modal fade" id="freezer_settings">' +
@@ -317,12 +316,12 @@ function(_, $, splunkUtil, mvc, SearchManager, SingleView, TableView){
         }
 
         // Click Events
-        $(".delete-row-link").on("click", function(e) {
+        $(".btn-delete").on("click", function(e) {
             console.log("event handler fired (click-delete-row-link)");
             //e.stopPropagation();
             //e.stopImmediatePropagation();
             //e.preventDefault();
-            $(".delete-row-link").trigger("deleteclick", {"id": freezer_id});
+            $(".btn-delete").trigger("deleteclick", {"id": freezer_id});
         });
 
         $(".btn.btn-primary.btn-save").on("click", function(e) {
@@ -336,7 +335,7 @@ function(_, $, splunkUtil, mvc, SearchManager, SingleView, TableView){
         });
     });
 
-    $(document).on("deleteclick", ".delete-row-link", function(e, data) {
+    $(document).on("deleteclick", ".btn-delete", function(e, data) {
         console.log("e", e);
         //e.stopPropagation();
         var id = $.trim(data["id"]);
