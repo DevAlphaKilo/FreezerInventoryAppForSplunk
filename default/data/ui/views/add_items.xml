@@ -62,6 +62,16 @@
     </input>
   </fieldset>
   <row>
+    <panel id="warning_none" depends="$show_warning_none$">
+      <html>
+        <div class="container-warning">
+          <div class="container-warning-header">Warning</div>
+          <div class="container-warning-body">You have not setup a freezer yet, please setup at least one freezer before adding item.<br/> Please visit the Freezer Management page to create/manage your freezers.</div> 
+        </div>
+      </html>
+    </panel>
+  </row>
+  <row>
     <panel id="panel_instructions" depends="$show_instructions$">
       <html>
         <h3>Use the tools above to begin your data entry.</h3>
@@ -109,10 +119,10 @@
       </html>
     </panel>
   </row>
-    <row>
+  <row>
     <panel id="panel_recent_items" depends="$show_recent$">
       <html>
-        <div id="recentlyAddedItems"></div>
+        <div id="recentlyAddedItems"/>
       </html>
     </panel>
   </row>

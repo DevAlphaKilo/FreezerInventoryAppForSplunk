@@ -3,6 +3,40 @@ function showItemTable (_, $, mvc, SearchManager, TableView) {
     $("#recentlyAddedItems").append("<div id=\"recentlyAddedItems_label\"><h2>Recently Added Items</h2></div><div id=\"recentlyAddedItems_container\"></div>");
 
     var time = Date.now();
+	
+	var search_freezers = new SearchManager({
+        id: "freezers" + time,
+        search: "| `freezers` | stats dc(id) AS total_defaults",
+        earliest_time: "-15m",
+        latest_time: "now",
+        preview: true,
+        cache: false,
+        cancelOnUnload: true
+    }, {tokens: true});
+	
+	var mainSearch = mvc.Components.get("freezers" + time);
+    //console.log(mainSearch)
+    var myResults = mainSearch.data("preview", { count: 1, offset: 0 });
+
+    myResults.on("data", function() {
+        // The full data object
+        var results = myResults.data();
+        var defaultCount = parseInt(results.rows[0]);
+		if (defaultCount == 0)
+        {
+            //console.log("Default count is > than 1");
+            //setToken("show_warning_none", "true");
+			mvc.Components.getInstance('default', {create: true}).set("show_warning_none", true);
+            mvc.Components.getInstance('submitted', {create: true}).set("show_warning_none", true);
+        }
+        else
+        {
+            //console.log("Default count is <= than 1");
+            //unsetToken("show_warning_none");
+			mvc.Components.getInstance('default', {create: true}).unset("show_warning_none");
+            mvc.Components.getInstance('submitted', {create: true}).unset("show_warning_none");
+        }
+    });
 
     // Set up search managers
     var search_items = new SearchManager({
