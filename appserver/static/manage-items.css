@@ -53,6 +53,9 @@ td.table_inline_icon {
 }
 
 /* #item_options modal */
+.modal-header {
+	margin-bottom: 20px;
+}
 
 .item-details-header,
 .location-header,
@@ -84,11 +87,38 @@ td.table_inline_icon {
 .delete-row {
 	display: block;
 	text-align: center;
+	font-size: large;
+	font-weight: bold;
+	font-family: monospace;
 }
 
 .section-header {
 	display: block;
 	width: 390px;
+}
+
+.select2-container .select2-choice {
+	margin-bottom: 10px;
+}
+
+.btn-view {
+	display: inline-block;
+	border: 1px solid transparent;
+	border-radius: 3px;
+	font-size: 14px;
+	line-height: 20px;
+	text-align: center;
+	vertical-align: middle;
+	cursor: pointer;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	text-decoration: none;
+	background-color: transparent;
+	padding: 5px 14px;
+}
+
+.btn-label {
+	padding-left: 0.5em;
 }
 
 div [id^='item_details_'] {
@@ -119,7 +149,7 @@ div.shared-resultstable-resultstablemaster.results-table {
 
 hr {
 	padding: 0px;
-	margin-top: 0px;
+	margin-top: 10px;
 	margin-bottom: 10px;
 }
 

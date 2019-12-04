@@ -12,7 +12,6 @@ function showModalItemDetails (splunkUtil, mvc, item) {
     var section_body_update   = '    <div class="control-group shared-controls-controlgroup">' +
                                 '      <label for="status" class="control-label">Item Status:</label>' +
                                 '        <div class="controls"><select name="status" id="status" disabled="disabled"></select></div>' +
-                                '        <br>' +
                                 '      <label for="location" class="control-label">Storage Location:</label>' +
                                 '        <div class="controls"><select name="location" id="location" disabled="disabled"></select></div>' +
                                 '    </div>';
@@ -21,8 +20,8 @@ function showModalItemDetails (splunkUtil, mvc, item) {
 
     var section_header_delete = '<div>';
     var section_body_delete   = '  <div class="delete-row"><div class="delete-label"></div><div class="delete-value">' +
-                                '<a class="delete-row-link" data-dismiss="modal" href="#">DELETE THIS ITEM</a>' +
-                                '</div></div>';
+                                //'<a class="delete-row-link" data-dismiss="modal" href="#">DELETE THIS ITEM</a>' +
+								'<a data-view="views/shared/Button" class="btn btn-pill btn-view btn-delete" href="#" tabindex="" title="delete" target="" rel="" data-dismiss="modal"><i class="icon-trash" style="font-size: 1.5em; vertical-align: middle;"></i><span class="btn-label" data-role="label">Delete This Item</span></a>';
     var section_footer_delete = '</div>';
     var section_delete = section_header_delete + section_body_delete + section_footer_delete;
 
@@ -89,13 +88,13 @@ function showModalItemDetails (splunkUtil, mvc, item) {
     $("#location").prop("disabled", false);
 
     // Click Events
-    $(".delete-row-link").on("click", function(e) {
+    $(".btn-delete").on("click", function(e) {
         console.log("event handler fired (click-delete-row-link)");
         //e.stopPropagation();
         //e.stopImmediatePropagation();
         //e.preventDefault();
         var id = $('.modal-body').children().find("div.item-details-value").html()
-        $(".delete-row-link").trigger("deleteclick", {"id": id});
+        $(".btn-delete").trigger("deleteclick", {"id": id});
     });
 
     $(".btn.btn-primary.btn-save").on("click", function(e) {
@@ -329,7 +328,7 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView){
         }
     });
 
-    $(document).on("deleteclick", ".delete-row-link", function(e, data) {
+    $(document).on("deleteclick", ".btn-delete", function(e, data) {
         console.log("e", e);
         //e.stopPropagation();
         var id = $.trim(data["id"]);
