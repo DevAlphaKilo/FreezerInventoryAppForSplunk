@@ -163,34 +163,56 @@ function showFreezersTable (_, $, mvc, SearchManager, SingleView, TableView) {
         freezersTotal.render();
         freezersActive.render();
         freezersInactive.render();
-
-    var mainSearch = mvc.Components.get("default_freezers" + time);
+	
+	var searchTotalFreezers = mvc.Components.get("total_freezers_" + time);
     //console.log(mainSearch)
-    var myResults = mainSearch.data("preview", { count: 1, offset: 0 });
+    var myFreezersResults = searchTotalFreezers.data("preview", { count: 1, offset: 0 });
 
-    myResults.on("data", function() {
+    myFreezersResults.on("data", function() {
         // The full data object
-        var results = myResults.data();
-        var defaultCount = parseInt(results.rows[0]);
-		if (defaultCount == 0)
+        var results = myFreezersResults.data();
+        var totalCount = parseInt(results.rows[0]);
+		if (totalCount > 0)
         {
-            //console.log("Default count is > than 1");
-            setToken("show_warning_none", "true");
-        }
-        else
-        {
-            //console.log("Default count is <= than 1");
+            setToken("show_table", "true");
             unsetToken("show_warning_none");
-        }
-        if (defaultCount > 1)
-        {
-            //console.log("Default count is > than 1");
-            setToken("show_warning_duplicate", "true");
+			
+			var mainSearch = mvc.Components.get("default_freezers" + time);
+			var myResults = mainSearch.data("preview", { count: 1, offset: 0 });
+
+			myResults.on("data", function() {
+				// The full data object
+				var results = myResults.data();
+				var defaultCount = parseInt(results.rows[0]);
+				if (defaultCount == 0)
+				{
+					//console.log("Default count is > than 1");
+					setToken("show_warning_no_default", "true");
+				}
+				else
+				{
+					//console.log("Default count is <= than 1");
+					unsetToken("show_warning_no_default");
+				}
+				if (defaultCount > 1)
+				{
+					//console.log("Default count is > than 1");
+					setToken("show_warning_duplicate", "true");
+				}
+				else
+				{
+					//console.log("Default count is <= than 1");
+					unsetToken("show_warning_duplicate");
+				}
+			});
         }
         else
         {
             //console.log("Default count is <= than 1");
-            unsetToken("show_warning_duplicate");
+			setToken("show_warning_none", "true");
+            unsetToken("show_table");
+			unsetToken("show_warning_no_default");
+			unsetToken("show_warning_duplicate");			
         }
     });
 

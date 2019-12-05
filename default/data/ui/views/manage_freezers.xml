@@ -18,6 +18,16 @@
     </panel>
   </row>
   <row>
+    <panel id="warning_none" depends="$show_warning_none$">
+      <html>
+        <div class="container-warning">
+          <div class="container-warning-header">Warning</div>
+          <div class="container-warning-body">You do not have any freezers in your inventory, please create a new one using the button below.</div>
+        </div>
+      </html>
+    </panel>
+  </row>
+  <row>
     <panel id="warning_duplicate" depends="$show_warning_duplicate$">
       <html>
         <div class="container-warning">
@@ -27,7 +37,7 @@
         </div>
       </html>
     </panel>
-    <panel id="warning_none" depends="$show_warning_none$">
+    <panel id="warning_no_default" depends="$show_warning_no_default$">
       <html>
         <div class="container-warning">
           <div class="container-warning-header">Warning</div>
@@ -38,7 +48,7 @@
     </panel>
   </row>
   <row>
-    <panel>
+    <panel depends="$show_table$">
       <html>
         <div id="myTable"/>
       </html>
