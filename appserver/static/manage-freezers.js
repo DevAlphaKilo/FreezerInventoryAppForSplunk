@@ -73,7 +73,7 @@ function showFreezersTable (_, $, mvc, SearchManager, SingleView, TableView) {
     });
 
     // Set up search managers
-        var search_defaults = new SearchManager({
+	var search_defaults = new SearchManager({
         id: "default_freezers" + time,
         search: "| `freezers` | search default=\"1\" | stats dc(id) AS total_defaults",
         earliest_time: "-15m",
@@ -83,7 +83,7 @@ function showFreezersTable (_, $, mvc, SearchManager, SingleView, TableView) {
         cancelOnUnload: true
     }, {tokens: true});
 
-        var search_freezers_total = new SearchManager({
+	var search_freezers_total = new SearchManager({
         id: "total_freezers_" + time,
         search: "| `freezers` | stats dc(id)",
         earliest_time: "-15m",
@@ -93,7 +93,7 @@ function showFreezersTable (_, $, mvc, SearchManager, SingleView, TableView) {
         cancelOnUnload: true
     }, {tokens: true});
 
-        var search_freezers_active = new SearchManager({
+	var search_freezers_active = new SearchManager({
         id: "active_freezers_" + time,
         search: "| `freezers` | search active=1 | stats dc(id)",
         earliest_time: "-15m",
@@ -103,7 +103,7 @@ function showFreezersTable (_, $, mvc, SearchManager, SingleView, TableView) {
         cancelOnUnload: true
     }, {tokens: true});
 
-        var search_freezers_inactive = new SearchManager({
+	var search_freezers_inactive = new SearchManager({
         id: "inactive_freezers_" + time,
         search: "| `freezers` | search NOT active=1| stats dc(id)",
         earliest_time: "-15m",
@@ -113,7 +113,7 @@ function showFreezersTable (_, $, mvc, SearchManager, SingleView, TableView) {
         cancelOnUnload: true
     }, {tokens: true});
 
-        var search_freezers = new SearchManager({
+	var search_freezers = new SearchManager({
         id: "freezers_" + time,
         search: "| `freezers` | table edit, active, default, id, name, location",
         earliest_time: "-15m",
@@ -132,7 +132,7 @@ function showFreezersTable (_, $, mvc, SearchManager, SingleView, TableView) {
         el: $("#freezersTotal_container")
     });
 
-        var freezersActive = new SingleView({
+    var freezersActive = new SingleView({
         id: "freezersActive_rendered",
         managerid: "active_freezers_" + time,
                 underLabel: "Active Freezers",
@@ -140,7 +140,7 @@ function showFreezersTable (_, $, mvc, SearchManager, SingleView, TableView) {
         el: $("#freezersActive_container")
     });
 
-        var freezersInactive = new SingleView({
+    var freezersInactive = new SingleView({
         id: "freezersInactive_rendered",
         managerid: "inactive_freezers_" + time,
                 underLabel: "Inactive Freezers",
@@ -148,7 +148,7 @@ function showFreezersTable (_, $, mvc, SearchManager, SingleView, TableView) {
         el: $("#freezersInactive_container")
     });
 
-        var myTableObj = new TableView({
+    var myTableObj = new TableView({
         id: "myTable_rendered",
         managerid: "freezers_" + time,
         drilldown: "none",
