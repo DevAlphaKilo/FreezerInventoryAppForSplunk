@@ -1,0 +1,30 @@
+/* dashboard panels */
+.dashboard-row .dashboard-panel .panel-body.html {
+  padding:0px;
+  margin:0px;
+}
+
+.dashboard-panel.custom-panel-background {
+	background-color: transparent;
+}
+
+/* warning panels */
+.container-warning {
+	padding: 30px;
+}
+
+.container-warning-header {
+	font-size: 24px;
+	font-weight: bolder;
+	text-decoration-line: underline;
+	text-transform: uppercase;
+	color: red;
+	padding-bottom: 10px;
+}
+
+.container-warning-body {
+	font-size: 16px;
+	font-weight: bolder;
+	display: block;
+	padding-bottom: 10px;
+}

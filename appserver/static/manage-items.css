@@ -47,11 +47,6 @@ td.table_inline_icon {
   display:none;  
 }
 
-.dashboard-row .dashboard-panel .panel-body.html {
-  padding:0px;
-  margin:0px;
-}
-
 /* #item_options modal */
 .modal-header {
 	margin-bottom: 20px;
