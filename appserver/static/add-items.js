@@ -45,7 +45,7 @@ function showItemTable (_, $, mvc, SearchManager, TableView) {
         earliest_time: "-15m",
         latest_time: "now",
         preview: true,
-        cache: true,
+        cache: false,
         cancelOnUnload: true
     }, {tokens: true});
 
@@ -80,10 +80,11 @@ function showItemTable (_, $, mvc, SearchManager, TableView) {
     console.log(myTableObj);
     myTableObj.render();
 
-    $("#panel_recent_items").children().addClass("custom-panel-background");
-    $("#panel_instructions").children().addClass("custom-panel-background");
-    $("#panel_additions").children().addClass("custom-panel-background");
+    $("#warning_none").children().addClass("custom-panel-background");
+	$("#panel_instructions").children().addClass("custom-panel-background");
+	$("#panel_additions").children().addClass("custom-panel-background");
     $("#panel_controls").children().addClass("custom-panel-background");
+	$("#panel_recent_items").children().addClass("custom-panel-background");    
 }
 
 require([
