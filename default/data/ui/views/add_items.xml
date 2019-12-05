@@ -1,4 +1,4 @@
-<form stylesheet="add-items.css" script="add-items.js" onunloadCancelJobs="true">
+<form script="add-items.js" stylesheet="add-items.css,warnings.css"  onunloadCancelJobs="true">
   <label>Add Items</label>
   <fieldset submitButton="false" autoRun="true">
     <input type="dropdown" id="item_type" token="item_type">
