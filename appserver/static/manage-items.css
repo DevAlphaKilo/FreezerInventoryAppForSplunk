@@ -140,7 +140,6 @@ div [id^='freezer_details_'] {
 	width: 250px;
 	height: fit-content;
 	padding-left: 50px;
-	padding-bottom: 85px;
 }
 
 div.shared-resultstable-resultstablemaster.results-table {
@@ -151,5 +150,16 @@ hr {
 	padding: 0px;
 	margin-top: 10px;
 	margin-bottom: 10px;
+}
+
+hr.bottom-rule {
+	margin-top: 175px;
+}
+
+
+td.row-table-value {
+	white-space: pre-wrap !important;
+    word-break: break-all;
+	/*text-transform: uppercase;*/
 }
 

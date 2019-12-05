@@ -195,6 +195,10 @@ function showItemTable (_, $, SearchManager, TableView) {
             });
 
             this._detailsSearchManager.startSearch();
+			
+			this._detailsSearchManager.on("search:start", function(state, job){
+                console.log("Detail Search starting...")
+            });
 
             this._detailsTableView = new TableView({
                 id: 'item_details_'+rowData.values[rowColMapping["id"]]+'_'+Date.now(),
@@ -204,18 +208,30 @@ function showItemTable (_, $, SearchManager, TableView) {
                 'displayRowNumbers': false,
                 'pageSize': '20',
                 //'el': $("#incident_details_exp")
-            });
+            });            
 
-            this._detailsSearchManager.on("search:start", function(state, job){
-                console.log("Detail Search starting...")
-            });
-
-            var section_header_item_details = '<hr><div id="header-details" class="section-header"><h3>Item Details</h3></div>';
+            var section_header_item_details = '<hr class="top-rule"><div id="header-details" class="section-header"><h3>Item Details</h3></div>';
             var section_footer_item_details = '';
-
+			
+			var IdCellRenderer = TableView.BaseCellRenderer.extend({
+				canRender: function(cell) {
+					// Only use the cell renderer for the specific field
+					return (cell.field==="field" || cell.field==="value");
+				},
+				render: function($td, cell) {
+					// ADD class to cell -> CSS
+					$td.addClass('row-table-' + cell.field).html(cell.value);
+				}
+			});
+			
+			this._detailsTableView.addCellRenderer(new IdCellRenderer());
+			
             $container.append(section_header_item_details);
             $container.append(this._detailsTableView.render().el);
             $container.append(section_footer_item_details);
+			
+			//setTimeout(function() {	$("td.string[data-cell-index=\"1\"]").first().css("white-space", "pre-wrap").css("word-break", "break-all"); }, 100);
+			//$("td.string[data-cell-index=\"1\"]").first().css("white-space", "pre-wrap").css("word-break", "break-all");
 
             //$("#section-details").each(function (index, data) {
             //    $(data).children().each(function (index, data) {
@@ -253,14 +269,14 @@ function showItemTable (_, $, SearchManager, TableView) {
             });
 
             var section_header_freezer_details = '<div id="header-freezer" class="section-header"><h3>Freezer Details</h3></div>';
-            var section_footer_freezer_details = '<br><hr>';
+            var section_footer_freezer_details = '<hr class="bottom-rule">';
 
             $container.append(section_header_freezer_details);
             $container.append(this._freezerTableView.render().el);
             $container.append(section_footer_freezer_details);
         },
         render: function($container, rowData) {
-
+			console.log(rowData)
         }
     });
 
