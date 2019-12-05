@@ -108,7 +108,28 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView){
     function unsetToken(name) {
         defaultTokenModel.unset(name);
         submittedTokenModel.unset(name);
-    }
+    }	
+	
+	function swapToDatepicker(input_el) {
+		var today  = new Date();
+		
+		mvc.Components.get(input_el).children["input"].$el.remove();
+
+		$("#" + input_el).append('<input type="text" class="datepicker" data-provide="datepicker" data-date-format="mm/dd/yyyy">');
+		
+		$('#' + input_el + ' .datepicker').datepicker({
+			format: 'mm/dd/yyyy',
+			defaultDate: today.toLocaleDateString("en-US"),
+			onSelect: function(dateText) {
+				setToken(input_el, dateText);
+			}
+		});
+		
+		$('#' + input_el + ' .datepicker').val($('#' + input_el + ' .datepicker').datepicker("option","defaultDate"));
+	}
+	
+    swapToDatepicker("purchase_date");
+	swapToDatepicker("sealed_date");
 
     function resetForm() {
         // reset dropdowns after posting events
