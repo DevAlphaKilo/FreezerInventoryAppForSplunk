@@ -195,6 +195,7 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView){
             });
         }, "json");
 
+		$('#post_success').remove();
 
         var modal = ''+
 '<div class="modal fade" id="post_success">' +
@@ -215,6 +216,8 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView){
 '</div>';
         $('body').prepend(modal);
         $('#post_success').modal('show');
+		setTimeout(function() {	$(document).find("#post_success").fadeOut(900); }, 2000);
+		setTimeout(function() {	$("div.modal-backdrop.fade").remove(); }, 3000);
         resetForm(mvc);
     });
     $("#reset_button").on("click", function (){ resetForm(mvc); });
