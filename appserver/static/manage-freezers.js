@@ -23,9 +23,9 @@ function showFreezersTable (_, $, mvc, SearchManager, SingleView, TableView) {
     };
 
     $("#myTable").append("<div id=\"myTable_container\"></div>");
-        $("#freezersTotal").append("<div id=\"freezersTotal_container\"></div>");
-        $("#freezersActive").append("<div id=\"freezersActive_container\"></div>");
-        $("#freezersInactive").append("<div id=\"freezersInactive_container\"></div>");
+	$("#freezersTotal").append("<div id=\"freezersTotal_container\"></div>");
+	$("#freezersActive").append("<div id=\"freezersActive_container\"></div>");
+	$("#freezersInactive").append("<div id=\"freezersInactive_container\"></div>");
 
     var time = Date.now();
 
@@ -270,6 +270,10 @@ function(_, $, splunkUtil, mvc, SearchManager, SingleView, TableView){
                                     '</div>';
     var section_footer_info = '</div>';
     var section_info = section_header_info + section_body_info + section_footer_info;
+	
+	$("#warning_none").children().addClass("custom-panel-background");
+	$("#warning_duplicate").children().addClass("custom-panel-background");
+	$("#warning_no_default").children().addClass("custom-panel-background");
 
     showFreezersTable(_, $, mvc, SearchManager, SingleView, TableView);
 
