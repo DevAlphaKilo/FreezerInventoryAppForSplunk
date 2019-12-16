@@ -1,4 +1,3 @@
-
 function showFreezersTable (_, $, mvc, SearchManager, SingleView, TableView) {
 
     var defaultTokenModel = mvc.Components.getInstance('default', {create: true});

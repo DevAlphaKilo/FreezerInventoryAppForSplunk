@@ -353,10 +353,10 @@ require([
      'splunkjs/mvc',
      'splunkjs/mvc/searchmanager',
      'splunkjs/mvc/tableview',
-     'splunkjs/mvc/simplexml/ready!',
-	 'https://code.jquery.com/ui/1.12.1/jquery-ui.js'
+	 '../app/FreezerInventoryAppForSplunk/jquery-ui/jquery-ui',
+     'splunkjs/mvc/simplexml/ready!'
 ],
-function(_, $, splunkUtil, mvc, SearchManager, TableView){
+function(_, $, splunkUtil, mvc, SearchManager, TableView, jqueryUI){
 
     showItemTable(_, $, SearchManager, TableView);
 
