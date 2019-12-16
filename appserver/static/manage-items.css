@@ -158,3 +158,63 @@ td.row-table-value {
 	/*text-transform: uppercase;*/
 }
 
+tr.highlight td {
+	background-color: #F1813F !important;
+}
+
+tr.highlight-light td {
+	background-color: #FDE5AE !important;
+}
+
+.button-container {
+	padding: 10px;	
+}
+
+#button-delete {
+	position: relative;
+	display: block;
+	float: right;
+	width: 150px;
+	height: 30px;
+	right: 30px;
+	bottom: 20px;
+}
+
+a.button {
+	cursor: pointer;
+	display: table-cell;
+	width: inherit;
+	height: inherit;
+	border-radius: 25px;
+	font-size: large;
+	background-color: black;
+	color: white;
+	vertical-align: middle;
+	text-align: center;
+}
+
+
+a.button:focus {
+	outline: none;
+	border: none;
+}
+
+/* unvisited link */
+a.button:link {
+	text-decoration: none;
+}
+
+/* visited link */
+a.button:visited {
+	text-decoration: none;
+}
+
+/* mouse over link */
+a.button:hover {
+	text-decoration: none;
+}
+
+/* selected link */
+a.button:active {
+	text-decoration: none;
+}

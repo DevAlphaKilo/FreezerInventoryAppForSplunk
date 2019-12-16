@@ -309,6 +309,41 @@ function showItemTable (_, $, SearchManager, TableView) {
     myTableObj.addRowExpansionRenderer(new CustomRowRenderer());
     console.log(myTableObj);
     myTableObj.render();
+	
+	$("#myTable_container").selectable({
+		selecting: function (event, ui) 
+		{
+			if (event.ctrlKey) 
+			{ $(event.toElement.parentNode).addClass("highlight-light"); }
+			else
+			{ $(".highlight").removeClass("highlight"); }
+			//console.log(ui)
+		},		
+		stop: function (event, ui) 
+		{
+			if (event.ctrlKey) 
+			{ 
+				$(".highlight-light").addClass("highlight").removeClass("highlight-light");
+				$('#button-delete').show();
+			}
+			else
+			{ 
+				//$(event.toElement.parentNode).addClass("highlight"); 
+				$('#button-delete').hide();
+			}
+		},
+		selected: function (event, ui) 
+		{
+			//$(".highlight-light").addClass("highlight").removeClass("highlight-light");
+			//console.log(ui)
+		},
+		unselected: function (event, ui) 
+		{          
+			//$('#button-delete').hide();
+			$(".highlight-light").removeClass("highlight-light"); 
+			$(".highlight").removeClass("highlight");
+		}
+	}); 
 }
 
 require([
@@ -318,7 +353,8 @@ require([
      'splunkjs/mvc',
      'splunkjs/mvc/searchmanager',
      'splunkjs/mvc/tableview',
-     'splunkjs/mvc/simplexml/ready!'
+     'splunkjs/mvc/simplexml/ready!',
+	 'https://code.jquery.com/ui/1.12.1/jquery-ui.js'
 ],
 function(_, $, splunkUtil, mvc, SearchManager, TableView){
 
@@ -382,5 +418,44 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView){
             console.log(status);
                         mvc.Components.get("myTable_rendered").collapseRow()
         }, "json");
+    });
+	
+	//$("html").click(function (){
+	//	var ins = $( "#myTable_container" ).selectable( "instance" );
+	//	// clear the selected list
+	//    ins.selectees = [];
+	//	// remove the selected class
+	//	ins.element.find('.highlight-light').removeClass('highlight-light'); 
+	//	ins.element.find('.highlight').removeClass('highlight'); 
+	//});
+	
+	var buttonDelete = '<div id="button-delete" class="button-container"><a class="button" href="#">Delete Items</a></div>';
+    $('body').append(buttonDelete);
+	$('#button-delete').hide();
+
+    $("#button-delete a").on("click", function(e) {
+        console.log("delete-button clicked");
+		var confirm_delete = window.confirm("Are you sure you want to delete these items?");
+		if (confirm_delete)
+		{
+			$("#myTable_container").find(".highlight").find(".id").each(function(index, data) {
+				var id = $(data)[0].innerText;
+				console.log("deleteing item - id: ", id);
+				
+				var item_delete_uri = splunkUtil.make_url('/splunkd/__raw/services/freezer_inventory/items?action=delete_item&id=' + id);
+				console.log("item_delete_uri", item_delete_uri);
+				$.get(item_delete_uri, function(data, status) {
+					console.log(data);
+					console.log(status);
+				});
+			});
+
+			var update_item_table = true;
+			if (update_item_table) {
+				mvc.Components.get("myTable_rendered").remove();
+				setTimeout(showItemTable(_, $, SearchManager, TableView), 2000);
+				$('#button-delete').hide();
+			}
+		}
     });
 });
