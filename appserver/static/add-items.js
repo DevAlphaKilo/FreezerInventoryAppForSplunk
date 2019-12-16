@@ -127,6 +127,8 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView){
 		});
 		
 		$('#' + input_el + ' .datepicker').val($('#' + input_el + ' .datepicker').datepicker("option","defaultDate"));
+		
+		setToken(input_el, $('#' + input_el + ' .datepicker').datepicker("option","defaultDate"));
 	}
 	
     swapToDatepicker("purchase_date");
