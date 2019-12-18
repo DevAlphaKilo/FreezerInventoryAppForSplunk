@@ -111,7 +111,21 @@ function showModalItemDetails (splunkUtil, mvc, item) {
     });
 }
 
-function showItemTable (_, $, SearchManager, TableView) {
+function showItemTable (_, $, mvc, SearchManager, TableView) {
+
+    var defaultTokenModel = mvc.Components.getInstance('default', {create: true});
+    var submittedTokenModel = mvc.Components.getInstance('submitted', {create: true});
+    
+    function setToken(name, value) {
+        defaultTokenModel.set(name, value);
+        submittedTokenModel.set(name, value);
+    }
+
+    function unsetToken(name) {
+        defaultTokenModel.unset(name);
+        submittedTokenModel.unset(name);
+    }
+    
     // Translations from rangemap results to CSS class
     var ICONS = {
         edit: 'settings',
@@ -291,6 +305,16 @@ function showItemTable (_, $, SearchManager, TableView) {
         cancelOnUnload: true
     }, {tokens: true});
 
+    var search_all_items = new SearchManager({
+        id: "freezer_items_all" + time,
+        search: "| `freezer_items` | search $freezers$ | stats dc(id) AS item_count",
+        earliest_time: "-15m",
+        latest_time: "now",
+        preview: true,
+        cache: true,
+        cancelOnUnload: true
+    }, {tokens: true});
+
     // Create a table
     var myTableObj = new TableView({
         id: "myTable_rendered",
@@ -309,7 +333,27 @@ function showItemTable (_, $, SearchManager, TableView) {
     myTableObj.addRowExpansionRenderer(new CustomRowRenderer());
     console.log(myTableObj);
     myTableObj.render();
-	
+
+    var searchTotalItems = mvc.Components.get("freezer_items_all" + time,);
+    //console.log(mainSearch)
+    var myItemsResults = searchTotalItems.data("preview", { count: 1, offset: 0 });
+
+    myItemsResults.on("data", function() {
+        // The full data object
+        var results = myItemsResults.data();
+        var totalCount = parseInt(results.rows[0]);
+		if (totalCount > 0)
+        {
+            setToken("show_items_table", "true");
+            unsetToken("show_warning_none");	
+        }
+        else
+        {
+            setToken("show_warning_none", "true");
+            unsetToken("show_items_table");			
+        }
+    });
+
 	$("#myTable_container").selectable({
 		selecting: function (event, ui) 
 		{
@@ -353,12 +397,14 @@ require([
      'splunkjs/mvc',
      'splunkjs/mvc/searchmanager',
      'splunkjs/mvc/tableview',
-	 '../app/FreezerInventoryAppForSplunk/jquery-ui/jquery-ui',
-     'splunkjs/mvc/simplexml/ready!'
+     'splunkjs/mvc/simplexml/ready!',
+     '../app/FreezerInventoryAppForSplunk/jquery-ui/jquery-ui'
 ],
-function(_, $, splunkUtil, mvc, SearchManager, TableView, jqueryUI){
+function(_, $, splunkUtil, mvc, SearchManager, TableView, jui){
 
-    showItemTable(_, $, SearchManager, TableView);
+    $("#warning_none").children().addClass("custom-panel-background");
+    
+    showItemTable(_, $, mvc, SearchManager, TableView);
 
     $(document).on("iconclick", "td", function(e, data) {
         //console.log("e", e);
@@ -398,7 +444,7 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView, jqueryUI){
         var update_item_table = true;
         if (update_item_table) {
             mvc.Components.get("myTable_rendered").remove();
-            showItemTable(_, $, SearchManager, TableView);
+            showItemTable(_, $, mvc, SearchManager, TableView);
         }
     });
 
@@ -416,7 +462,7 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView, jqueryUI){
         $.post( rest_url, post_data, function(data, status) {
             console.log(data);
             console.log(status);
-                        mvc.Components.get("myTable_rendered").collapseRow()
+            mvc.Components.get("myTable_rendered").collapseRow()
         }, "json");
     });
 	
@@ -453,7 +499,7 @@ function(_, $, splunkUtil, mvc, SearchManager, TableView, jqueryUI){
 			var update_item_table = true;
 			if (update_item_table) {
 				mvc.Components.get("myTable_rendered").remove();
-				setTimeout(showItemTable(_, $, SearchManager, TableView), 2000);
+				setTimeout(showItemTable(_, $, mvc, SearchManager, TableView), 2000);
 				$('#button-delete').hide();
 			}
 		}
