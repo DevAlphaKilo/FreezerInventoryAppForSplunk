@@ -285,7 +285,7 @@ function(_, $, splunkUtil, mvc, SearchManager, SingleView, TableView){
 
                 var section_header_delete = '<div>';
                 var section_body_delete   = '  <div class="delete-row"><div class="delete-label"></div><div class="delete-value">' +
-                                            '<a data-view="views/shared/Button" class="btn btn-pill btn-view btn-delete" href="#" tabindex="" title="delete" target="" rel="" data-dismiss="modal"><i class="icon-trash" style="font-size: 1.5em; vertical-align: middle;"></i><span class="btn-label" data-role="label">Delete This Item</span></a>';
+                                            '<a data-view="views/shared/Button" class="btn btn-pill btn-view btn-delete" href="#" tabindex="" title="delete" target="" rel="" data-dismiss="modal"><i class="icon-trash" style="font-size: 1.5em; vertical-align: middle;"></i><span class="btn-label" data-role="label">Delete This Freezer</span></a>';
                 var section_footer_delete = '</div>';
                 var section_delete = section_header_delete + section_body_delete + section_footer_delete;
 
