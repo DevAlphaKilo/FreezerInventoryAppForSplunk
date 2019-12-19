@@ -1,4 +1,4 @@
-<dashboard script="manage-items.js" stylesheet="manage-items.css,warnings.css" onunloadCancelJobs="true" hideFilters="true">
+<dashboard script="manage-items.js" stylesheet="manage-items.css,warnings.css" onunloadCancelJobs="true" hideFilters="true" hideEdit="true">
   <label>Manage Items</label> 
   <fieldset submitButton="false">
     <input type="multiselect" token="freezers" searchWhenChanged="true">
@@ -22,7 +22,16 @@
     </input>
   </fieldset>
   <row>
-    <panel>
+    <panel id="warning_none" depends="$show_warning_none$">
+      <html>
+        <div class="container-warning">
+          <div class="container-warning-body">You currently have no items. After adding some to a freezer, they will be displayed here.</div> 
+        </div>
+      </html>
+    </panel>
+  </row>
+  <row>
+    <panel depends="$show_items_table$">
       <html>
         <div id="myTable"></div>
       </html>

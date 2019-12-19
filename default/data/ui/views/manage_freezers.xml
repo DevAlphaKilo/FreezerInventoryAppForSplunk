@@ -1,4 +1,4 @@
-<dashboard script="manage-freezers.js" stylesheet="manage-freezers.css,warnings.css" onunloadCancelJobs="true" hideFilters="true">
+<dashboard script="manage-freezers.js" stylesheet="manage-freezers.css,warnings.css" onunloadCancelJobs="true" hideFilters="true" hideEdit="true">
   <label>Manage Freezers</label>
   <row>
     <panel>
