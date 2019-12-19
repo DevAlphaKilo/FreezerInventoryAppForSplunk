@@ -1,20 +1,14 @@
 item_subtype,item_sub_subtype
-beef,ground 70/30
-beef,ground 80/20
-beef,ground 90/10
-beef,ground 93/07
-beef,steak (ny strip)
-beef,steak (filet)
-beef,steak (sirloin)
-beef,steak (ribeye)
+beef,ground
+beef,steak
 beef,hamburger
 beef,hotdog
 beef,sausage
+port,steak
 pork,chop
 pork,loin
 pork,sausage
-chicken,ground 90/10
-chicken,ground 93/07
+chicken,ground
 chicken,wings
 chicken,breast
 chicken,thighs
@@ -25,16 +19,156 @@ mahi-mahi,filet
 salmon,filet
 shrimp,bag
 tilapia,filet
+tilapia,sticks
 venison,ground
 venison,steak
 venison,backstrap
 venison,sausage
-frozen bag,small
-frozen bag,medium
-frozen bag,large
+barley,small
+barley,medium
+barley,large
+buckwheat,small
+buckwheat,medium
+buckwheat,large
+farro,small
+farro,medium
+farro,large
+flour,small
+flour,medium
+flour,large
+millet,small
+millet,medium
+millet,large
+oat,small
+oat,medium
+oat,large
+rice,small
+rice,medium
+rice,large
+rye berries,small
+rye berries,medium
+rye berries,large
+quinoa,small
+quinoa,medium
+quinoa,large
+wheat,small
+wheat,medium
+wheat,large
+wheat berries,small
+wheat berries,medium
+wheat berries,large
+avocado,small
+avocado,medium
+avocado,large
+apple,small
+apple,medium
+apple,large
+apricot,small
+apricot,medium
+apricot,large
+banana,small
+banana,medium
+banana,large
+blackberry,small
+blackberry,medium
+blackberry,large
+blueberry,small
+blueberry,medium
+blueberry,large
+boysenberry,small
+boysenberry,medium
+boysenberry,large
+cantaloupe,small
+cantaloupe,medium
+cantaloupe,large
+cherry,small
+cherry,medium
+cherry,large
+cranberry,small
+cranberry,medium
+cranberry,large
+clementine,small
+clementine,medium
+clementine,large
+coconut,small
+coconut,medium
+coconut,large
+grape,small
+grape,medium
+grape,large
+grapefruit,small
+grapefruit,medium
+grapefruit,large
+kiwi,small
+kiwi,medium
+kiwi,large
+lime,small
+lime,medium
+lime,large
+lemon,small
+lemon,medium
+lemon,large
+mango,small
+mango,medium
+mango,large
+melon,small
+melon,medium
+melon,large
+nectarine,small
+nectarine,medium
+nectarine,large
+orange,small
+orange,medium
+orange,large
+peach,small
+peach,medium
+peach,large
+pear,small
+pear,medium
+pear,large
+pineapple,small
+pineapple,medium
+pineapple,large
+plum,small
+plum,medium
+plum,large
+pomegranate,small
+pomegranate,medium
+pomegranate,large
+raspberry,small
+raspberry,medium
+raspberry,large
+strawberry,small
+strawberry,medium
+strawberry,large
+tangerine,small
+tangerine,medium
+tangerine,large
+watermelon,small
+watermelon,medium
+watermelon,large
 popsicles,box
 popsicles,bag
 icecream,bar
+icecream,bag
 icecream,tub
+burrito,beef
+burrito,chicken
+burrito,steak
+choclate,small
+choclate,large
+cheese sticks,small
+cheese sticks,large
+hot pocket,small
+hot pocket,large
+pretzels,small
+pretzels,medium
+pretzels,large
+popsicles,small
+popsicles,medium
+popsicles,large
+onion rings,small
+onion rings,medium
+onion rings,large
 bag,10lb
 bag,20lb
