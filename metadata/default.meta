@@ -90,9 +90,24 @@ modtime = 1575403812.111560000
 
 ### Saved Searches
 
-[savedsearches/Items%20Recently%20Sealed%20-%207%20Days]
+[savedsearches/Item%28s%29%20Recently%20Sealed%20-%207%20Days]
 access = read : [ * ], write : [ admin, power ]
 export = none
 owner = nobody
-version = 8.0.0
+version = 8.0.1
 modtime = 1575411726.708947000
+
+[savedsearches/Item%28s%29%20Removed%20-%20Last%207%20Days]
+access = read : [ * ], write : [ admin, power ]
+export = none
+owner = nobody
+version = 8.0.1
+modtime = 1576768126.975924000
+
+[savedsearches/Oldest%20Item%28s%29%20-%20Top%2020]
+access = read : [ * ], write : [ admin, power ]
+export = none
+owner = nobody
+version = 8.0.1
+modtime = 1576765813.933467000
+
