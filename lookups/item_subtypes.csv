@@ -80,6 +80,7 @@ vegetable,tomatillo
 vegetable,yam
 vegetable,zucchini
 dairy,icecream
+dairy,yogurt
 snack,burrito
 snack,choclate
 snack,cheese sticks
@@ -88,3 +89,4 @@ snack,pretzels
 snack,popsicles
 snack,onion rings
 ice,bag
+ice,block
