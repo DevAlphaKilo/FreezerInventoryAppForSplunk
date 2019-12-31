@@ -5,41 +5,79 @@ on:
   push:
     branches:
     - master
+    - fix/*
 
 jobs:
   build:
+    
+    name: Splunk App Inspect
 
     runs-on: ubuntu-latest
 
     steps:
+    - name: grab packaging toolkit
+      run: |
+        curl -Ls http://download.splunk.com/misc/packaging-toolkit/splunk-packaging-toolkit-1.0.0.tar.gz -o splunk-packaging-toolkit-1.0.0.tar.gz
+        mkdir splunk-packaging-toolkit-1.0.0
+        tar -xvzf splunk-packaging-toolkit-1.0.0.tar.gz -C splunk-packaging-toolkit-1.0.0 --strip-components=1
     - name: grab appinspect
       run: |
         curl -Ls https://download.splunk.com/misc/appinspect/splunk-appinspect-latest.tar.gz -o appinspect-latest.tar.gz
         mkdir appinspect-latest
         tar -xvzf appinspect-latest.tar.gz -C appinspect-latest --strip-components=1
-    - name: install appinspect
+    - name: create virtual python venv
       run: |
-        cd appinspect-latest
         rm -rf venv
         sudo pip install --upgrade pip setuptools
         sudo pip install virtualenv
         virtualenv --clear venv
-        source venv/bin/activate
-        pip install .
-    - name: prepare for checkout
+        #source venv/bin/activate
+        mkdir -p ./$REPO
+      env:
+        REPO: '${{ github.repository }}'
+    - name: install packaging toolkit
       run: |
-        mkdir FreezerInventoryAppForSplunk
+        source venv/bin/activate
+        cd splunk-packaging-toolkit-1.0.0
+        pip install .
+    - name: install app inspect
+      run: |
+        source venv/bin/activate
+        cd appinspect-latest
+        pip install .
     - uses: actions/checkout@v2
       with: 
-        path: 'FreezerInventoryAppForSplunk'
-    - name: run appinspect
+        path: '${{ github.repository }}'
+    - name: post-checkout cleanup
       run: |
-        rm -rf FreezerInventoryAppForSplunk/.git/
-        rm -rf FreezerInventoryAppForSplunk/.gitignore
-        rm -rf FreezerInventoryAppForSplunk/.github
-        tar -cvzf FreezerInventoryAppForSplunk.tar.gz FreezerInventoryAppForSplunk/
-        mkdir dist
-        cp FreezerInventoryAppForSplunk.tar.gz dist/
-        cd appinspect-latest
+        # move to repo dir
+        cd $REPO/
+        # remove hidden files
+        rm -rf .gitignore
+        # remove hidden dirs
+        rm -rf .git/
+        rm -rf .github/
+        # display contents to be packaged as app      
+        ls -al
+      env:
+        REPO: '${{ github.repository }}'
+    - name: run packaging toolkit
+      run: |
         source venv/bin/activate
-        splunk-appinspect inspect ../FreezerInventoryAppForSplunk.tar.gz --mode precert
+        # create output dir for tarball
+        mkdir tarball
+        # change dir into app
+        cd $REPO/
+        # create app manifest
+        slim generate-manifest --output app.manifest ./ 
+        # validate app against manifest
+        slim validate ./
+        # package app w/ manifest into a tarball
+        slim package ./ --output ../../tarball
+      env:
+        REPO: '${{ github.repository }}'
+    - name: run app inspect
+      run: |
+        source venv/bin/activate
+        ls -al tarball
+        splunk-appinspect inspect tarball/*.tar.gz --mode precert --max-messages=all
