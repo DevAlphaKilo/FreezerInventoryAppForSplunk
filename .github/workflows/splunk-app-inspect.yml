@@ -1,0 +1,45 @@
+name: splunk-app-inspect
+
+on:
+  pull_request:
+  push:
+    branches:
+    - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: grab appinspect
+      run: |
+        curl -Ls https://download.splunk.com/misc/appinspect/splunk-appinspect-latest.tar.gz -o appinspect-latest.tar.gz
+        mkdir appinspect-latest
+        tar -xvzf appinspect-latest.tar.gz -C appinspect-latest --strip-components=1
+    - name: install appinspect
+      run: |
+        cd appinspect-latest
+        rm -rf venv
+        sudo pip install --upgrade pip setuptools
+        sudo pip install virtualenv
+        virtualenv --clear venv
+        source venv/bin/activate
+        pip install .
+    - name: prepare for checkout
+      run: |
+        mkdir FreezerInventoryAppForSplunk
+    - uses: actions/checkout@v2
+      with: 
+        path: 'FreezerInventoryAppForSplunk'
+    - name: run appinspect
+      run: |
+        rm -rf FreezerInventoryAppForSplunk/.git/
+        rm -rf FreezerInventoryAppForSplunk/.gitignore
+        rm -rf FreezerInventoryAppForSplunk/.github
+        tar -cvzf FreezerInventoryAppForSplunk.tar.gz FreezerInventoryAppForSplunk/
+        mkdir dist
+        cp FreezerInventoryAppForSplunk.tar.gz dist/
+        cd appinspect-latest
+        source venv/bin/activate
+        splunk-appinspect inspect ../FreezerInventoryAppForSplunk.tar.gz
