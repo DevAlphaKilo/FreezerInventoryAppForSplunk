@@ -45,10 +45,10 @@
     </panel>
     <panel>
       <single>
-        <title>Total Meat Items</title>
+        <title>Total Protein Items</title>
         <search>
           <query>| `freezer_items` 
-| search type="meat" status="available" $freezers$
+| search type="protein" status="available" $freezers$
 | stats dc(id)</query>
           <earliest>$timespan.earliest$</earliest>
           <latest>$timespan.latest$</latest>
@@ -121,7 +121,7 @@
         </search>
         <option name="charting.chart">pie</option>
         <option name="charting.drilldown">none</option>
-        <option name="charting.fieldColors">{"meat": #AF575A, "vegetable": #B6C75A, "snack": #4FA484, "ice": #62B3B2, "misc": #BD9872}</option>
+        <option name="charting.fieldColors">{"protein": #E37267, "vegetable": #76B374, "snack": #FACB5D, "ice": #BFE9FF, "dairy": #338AB0, "grain": #BD9872}</option>
         <option name="refresh.display">progressbar</option>
       </chart>
     </panel>
@@ -137,7 +137,6 @@
         </search>
         <option name="charting.chart">pie</option>
         <option name="charting.drilldown">none</option>
-        <option name="charting.fieldColors">{"beef": #AF575A, "chicken": #AF575A,"pork": #AF575A, "fish": #AF575A, "frozen bag": #B6C75A, "popsicles": #4FA484, "icecream": #4FA484, "bag": #62B3B2 }</option>
         <option name="refresh.display">progressbar</option>
       </chart>
     </panel>
@@ -159,7 +158,7 @@
         <option name="charting.chart">column</option>
         <option name="charting.chart.stackMode">stacked</option>
         <option name="charting.drilldown">none</option>
-        <option name="charting.fieldColors">{"meat": #AF575A, "vegetable": #B6C75A, "snack": #4FA484, "ice": #62B3B2, "misc": #BD9872}</option>
+        <option name="charting.fieldColors">{"protein": #E37267, "vegetable": #76B374, "snack": #FACB5D, "ice": #BFE9FF, "dairy": #338AB0, "grain": #BD9872}</option>
         <option name="refresh.display">progressbar</option>
       </chart>
     </panel>
