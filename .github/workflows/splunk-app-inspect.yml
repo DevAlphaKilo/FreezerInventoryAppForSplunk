@@ -42,4 +42,4 @@ jobs:
         cp FreezerInventoryAppForSplunk.tar.gz dist/
         cd appinspect-latest
         source venv/bin/activate
-        splunk-appinspect inspect ../FreezerInventoryAppForSplunk.tar.gz
+        splunk-appinspect inspect ../FreezerInventoryAppForSplunk.tar.gz --mode precert
