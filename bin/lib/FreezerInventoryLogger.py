@@ -1,8 +1,14 @@
 import os
+import sys
 import logging
 import time
 from logging.config import fileConfig
-import ConfigParser
+
+if sys.version_info[0] < 3:
+  import ConfigParser # python2
+else:
+  import configparser as ConfigParser # python3
+
 import splunk.appserver.mrsparkle.lib.util as util
 
 def setupLogger(logger='freezer_inventory'):

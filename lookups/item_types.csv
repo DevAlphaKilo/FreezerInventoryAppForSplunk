@@ -1,8 +1,8 @@
 item_types,enabled
-meat,true
-grain,true
-fruit,true
-vegetable,true
 dairy,true
-snack,true
+fruit,true
+grain,true
 ice,true
+protein,true
+snack,true
+vegetable,true

@@ -1,41 +1,23 @@
 item_type,item_subtype
-meat,beef
-meat,chicken
-meat,pork
-meat,venison
-meat,shrimp
-meat,cod
-meat,mahi-mahi
-meat,salmon
-meat,tilapia
-grain,barley
-grain,buckwheat
-grain,farro
-grain,flour
-grain,millet
-grain,oat
-grain,rice
-grain,rye berries
-grain,quinoa
-grain,wheat
-grain,wheat berries
-fruit,avocado
+dairy,icecream
+dairy,yogurt
 fruit,apple
 fruit,apricot
+fruit,avocado
 fruit,banana
 fruit,blackberry
 fruit,blueberry
 fruit,boysenberry
 fruit,cantaloupe
 fruit,cherrie
-fruit,cranberry
 fruit,clementine
 fruit,coconut
+fruit,cranberry
 fruit,grape
 fruit,grapefruit
 fruit,kiwi
-fruit,lime
 fruit,lemon
+fruit,lime
 fruit,mango
 fruit,melon
 fruit,nectarine
@@ -49,9 +31,39 @@ fruit,raspberry
 fruit,strawberry
 fruit,tangerine
 fruit,watermelon
-vegetable,asparagus
+grain,barley
+grain,buckwheat
+grain,farro
+grain,flour
+grain,millet
+grain,oat
+grain,quinoa
+grain,rice
+grain,rye berries
+grain,wheat
+grain,wheat berries
+ice,bag
+ice,block
+protein,beef
+protein,chicken
+protein,cod
+protein,mahi-mahi
+protein,pork
+protein,salmon
+protein,shrimp
+protein,tilapia
+protein,tofu
+protein,venison
+snack,burrito
+snack,cheese sticks
+snack,chocolate
+snack,hot pocket
+snack,onion rings
+snack,popsicles
+snack,pretzels
 vegetable,artichoke
 vegetable,arugula
+vegetable,asparagus
 vegetable,broccoli
 vegetable,brussels sprout
 vegetable,cabbage
@@ -60,14 +72,14 @@ vegetable,cauliflower
 vegetable,celery
 vegetable,chive
 vegetable,cucumber
-vegetable,green bean
 vegetable,eggplant
 vegetable,fennel
+vegetable,green bean
 vegetable,kale
 vegetable,lettuce
 vegetable,okra
-vegetable,onion
 vegetable,olive
+vegetable,onion
 vegetable,parsnip
 vegetable,pea
 vegetable,pepper
@@ -75,18 +87,7 @@ vegetable,potato
 vegetable,pumpkin
 vegetable,radish
 vegetable,shallot
-vegetable,tomato
 vegetable,tomatillo
+vegetable,tomato
 vegetable,yam
 vegetable,zucchini
-dairy,icecream
-dairy,yogurt
-snack,burrito
-snack,chocolate
-snack,cheese sticks
-snack,hot pocket
-snack,pretzels
-snack,popsicles
-snack,onion rings
-ice,bag
-ice,block

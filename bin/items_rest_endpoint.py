@@ -3,8 +3,12 @@ import sys
 import json
 import urllib
 import operator
-import httplib
 import socket
+
+if sys.version_info[0] < 3:
+  import httplib # python2
+else:
+  from http import HTTPStatus as httplib # python3
 
 import splunk
 import splunk.appserver.mrsparkle.lib.util as util
